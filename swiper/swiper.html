@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TweenMax Timeline Animation</title>
+    <script>
+        window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.1.6/css/swiper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.1.6/js/swiper.js"></script>
+    
+    <style>
+        body {
+            text-align: center;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+       .area__slider { width: 1070px; height: 758px; text-indent: 0; position: absolute; top: 332px; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); }
+
+.area__slider .txt { text-indent: -999em; }
+
+.area__slider.active { background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/bg-slide.png") no-repeat 50% 738px; }
+
+.area__slider .swiper-container { width: 900px; height: 438px; }
+
+.area__slider .swiper-slide { text-align: center; }
+
+.area__slider .noData { background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/bg-emty.png") no-repeat 50% 50%; height: 758px; }
+
+.swiper-button-next, .swiper-button-prev { top: 207px; width: 54px; height: 80px; outline: none; }
+
+.swiper-button-next { right: 0; background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/btn-next.png") no-repeat 0 0; }
+
+.swiper-button-prev { left: 0; background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/btn-prev.png") no-repeat 0 0; }
+
+.swiper-wrapper img { position: absolute; top: 142px; left: 118px; width: 229px; height: 229px; }
+
+.swiper-wrapper .mask { position: absolute; top: 0; left: 0; width: 900px; height: 438px; background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/bg-slider.png") no-repeat 50% 0; }
+
+.swiper-wrapper strong { display: block; position: absolute; top: 0; width: 100%; padding-top: 25px; font-size: 34px; color: #fff; line-height: 1; }
+
+.swiper-wrapper strong i { display: inline-block; width: 17px; height: 17px; padding: 0 20px; background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/bg-ico.png") no-repeat 50% 50%; }
+
+.swiper-wrapper p { position: absolute; top: 182px; left: 470px; font-size: 24px; white-space: pre; text-align: left; color: #dfbe75; line-height: 1.4; }
+
+.swiper-wrapper span { display: block; position: absolute; top: 297px; left: 470px; font-size: 18px; color: #b6b6b7; }
+
+.list-wrap { overflow: hidden; position: absolute; top: 438px; left: 24px; width: 1040px; }
+
+.list-wrap .pagination { float: left; position: relative; width: 205px; height: 215px; text-align: center; }
+
+.list-wrap .pagination img { width: 94px; height: 94px; margin-top: 48px; opacity: .7; border-radius: 10px; }
+
+.list-wrap .pagination strong { display: block; position: absolute; top: 160px; width: 100%; font-size: 20px; }
+
+.list-wrap .pagination em { display: block; position: absolute; top: 193px; width: 100%; font-size: 16px; font-style: normal; }
+
+.list-wrap .pagination.active { background: url("https://wstatic-cdn.plaync.com/promo/aion/event/2018/180614_emblem1st/img/bg-pic.png") no-repeat 50% -5px; }
+
+.list-wrap .pagination.active img { opacity: 1; }
+
+.list-wrap .pagination.active strong { color: #f6ba5d; }
+
+.list-wrap .pagination.active em { color: #ffd496; }
+    </style>
+</head>
+
+<body>
+    <div class="gellary-area swiper-container">
+        <ul class="swiper-wrapper">
+            <li class="swiper-slide"><img th:src="|${ui['wstatic.lineage']}/event/2018/180000_teamproject/img/Atype/slide1.jpg|"
+                    alt="" /></li>
+            <li class="swiper-slide"><img th:src="|${ui['wstatic.lineage']}/event/2018/180000_teamproject/img/Atype/slide2.jpg|"
+                    alt="" /></li>
+            <li class="swiper-slide"><img th:src="|${ui['wstatic.lineage']}/event/2018/180000_teamproject/img/Atype/slide3.jpg|"
+                    alt="" /></li>
+        </ul>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+
+
+
+    <div class="area__slider active">
+        <div>
+            <div class="swiper-container swiper-container-horizontal">
+                <div class="swiper-wrapper" style="transform: translate3d(-3720px, 0px, 0px); transition-duration: 0ms;">
+                    <div class="swiper-slide" style="width: 900px; margin-right: 30px;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102429-BwVOJ1Zke60Ha5tx454R0-v4"
+                            alt="">
+                        <div class="mask"></div> <strong><i></i>엘리시움<i></i></strong>
+                        <p>엘슘'-^*</p> <span>[엘리시움]리본</span>
+                    </div>
+                    <div class="swiper-slide" style="width: 900px; margin-right: 30px;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102522-huR1AApuA4BaB16yye5t0-v4"
+                            alt="">
+                        <div class="mask"></div> <strong><i></i>판데모니움<i></i></strong>
+                        <p>마족 지역 이름인만큼
+                            날카롭게 제작해 봤습니다! :)</p> <span>[판데모니움]서란</span>
+                    </div>
+                    <div class="swiper-slide" style="width: 900px; margin-right: 30px;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102720-lhVBSgoN1RoHaY6rpp5p0-v4"
+                            alt="">
+                        <div class="mask"></div> <strong><i></i>에레슈란타<i></i></strong>
+                        <p>에레에레에레</p> <span>[에레슈란타]엠마</span>
+                    </div>
+                    <div class="swiper-slide swiper-slide-prev" style="width: 900px; margin-right: 30px;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102822-FuiKZUFYkzZFBIMUrren0-v4"
+                            alt="">
+                        <div class="mask"></div> <strong><i></i>포에타<i></i></strong>
+                        <p>다미누가 살고 있는 포에타
+                            친환경적으로 맹글었슴다!
+                            불꽃주세효!</p> <span>[포에타]라라곰</span>
+                    </div>
+                    <div class="swiper-slide swiper-slide-active" style="width: 900px; margin-right: 30px;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102915-wHvRA1ZjQSrSucAelhLO0-v4"
+                            alt="">
+                        <div class="mask"></div> <strong><i></i>이스할겐<i></i></strong>
+                        <p>Have a Fierce Battle</p> <span>[이스할겐]Roxy</span>
+                    </div>
+                </div><span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+            </div>
+            <ul class="list-wrap">
+                <li class="pagination"><a href="#;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102429-BwVOJ1Zke60Ha5tx454R0-v4"
+                            alt=""> <strong>엘리시움</strong> <em>리본</em></a></li>
+                <li class="pagination"><a href="#;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102522-huR1AApuA4BaB16yye5t0-v4"
+                            alt=""> <strong>판데모니움</strong> <em>서란</em></a></li>
+                <li class="pagination"><a href="#;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102720-lhVBSgoN1RoHaY6rpp5p0-v4"
+                            alt=""> <strong>에레슈란타</strong> <em>엠마</em></a></li>
+                <li class="pagination"><a href="#;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102822-FuiKZUFYkzZFBIMUrren0-v4"
+                            alt=""> <strong>포에타</strong> <em>라라곰</em></a></li>
+                <li class="pagination active"><a href="#;"><img src="https://imgfiles-cdn.plaync.com/file/contents/download/20180615102915-wHvRA1ZjQSrSucAelhLO0-v4"
+                            alt=""> <strong>이스할겐</strong> <em>Roxy</em></a></li>
+            </ul>
+            <div class="swiper-button-next swiper-button-disabled" tabindex="0" role="button" aria-label="Next slide"
+                aria-disabled="true"></div>
+            <div class="swiper-button-prev" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="false"></div>
+            <p class="txt">! 서버 엠블럼 공모전에 참여한 작품 중 하나를 공개하는 공간으로 당선과 무관할 수 있습니다.</p>
+        </div>
+    </div>
+    <script src="./swiper.js"></script>
+</body>
+
+</html>

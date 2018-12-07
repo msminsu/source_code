@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TweenMax Timeline Animation</title>
+    <script>
+            window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <style>
+        body{text-align: center;}
+        *{margin: 0;padding: 0;}
+        div{position: absolute;font-weight: bold; width: 200px;height: 100px;}
+
+
+        .canvas{position:relative; overflow: hidden; width:500px;height: 400px;margin: 0 auto;background: #2d3336;border-radius: 40px}
+        #text1{ color: #ee606e; font-size: 32px;}
+        #text2{ color: #fff; font-size: 24px;}
+        #text3{ color: #ffd46b; font-size: 40px;}
+        #car{ background: teal;}
+        #lift{ background: lime;}
+
+
+    </style>
+</head>
+<body>
+    <h1>Timeline Animation</h1>
+    <div class="canvas">
+        <div id="text1">NOW</div>
+        <div id="text2">HERE IS</div>
+        <div id="text3">TWEEN MAX</div>
+        <div id="car"></div>
+        <div id="lift"></div>
+
+    </div>
+    <script src="./ani.js"></script>
+</body>
+</html>

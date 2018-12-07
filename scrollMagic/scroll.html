@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TweenMax Timeline Animation</title>
+    <script>
+            window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.6/ScrollMagic.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.6/plugins/debug.addIndicators.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/animation.gsap.min.js"></script>
+    <style>
+        body{text-align: center;}
+        *{margin: 0;padding: 0;}
+        .contents > div{position: relative;font-weight: bold;height: 800px;}
+        .box1{background-color: tan;height: 500px;}
+        .box2{background-color: teal;}
+        .box3{background-color: tomato;}
+        .box4{background-color: wheat;}
+        .main{background-color: silver;}
+
+        .aside{position: fixed;left: 0; top:50%; margin-top: -100px; z-index: 1;}
+        div[class *='tomato']{position: absolute; width: 100px;height: 100px;background: tomato;}
+        div[class *='banana']{position: absolute; width: 100px;height: 100px;background: yellow;}
+
+    </style>
+</head>
+<body>
+    <nav class="aside">
+        <ul>
+            <li><a href="#nav-1">menu1</a></li>
+            <li><a href="#nav-2">menu2</a></li>
+            <li><a href="#nav-3">menu3</a></li>
+            <li><a href="#nav-4">menu4</a></li>
+        </ul>
+    </nav>
+   <div class="contents">
+       <div class="scen main">main
+            <div class="tomato0">tomato</div>
+            <div class="banana0">banana</div>
+       </div>
+       <div id="nav-1" class="scen box1">box1
+           <div class="tomato1">tomato</div>
+           <div class="banana1">banana</div>
+       </div>
+       <div id="nav-2" class="scen box2">box2
+           <div class="tomato2">tomato</div>
+           <div class="banana2">banana</div>
+       </div>
+       <div id="nav-3" class="scen box3">box3
+            <div class="tomato3">tomato</div>
+            <div class="banana3">banana</div>
+       </div>
+       <div id="nav-4" class="scen box4">box4
+            <div class="tomato4">tomato</div>
+            <div class="banana4">banana</div>
+       </div>
+   </div>
+    <script src="./scroll.js"></script>
+</body>
+</html>

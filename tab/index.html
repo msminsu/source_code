@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tab</title>
+    <script>
+            window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')
+    </script>
+    <style>
+        body{text-align: center;}
+        *{margin: 0;padding: 0;}
+
+
+
+       .tab__menu { overflow: hidden; position: absolute; top: 473px; left: 50%; width: 1006px; height: 106px; margin-left: -503px; }
+
+.tab__menu li { position: relative; float: left; }
+
+.tab__menu li a { display: block; width: 225px; height: 101px; }
+
+.tab__menu li:nth-child(1) { background: yellow; }
+.tab__menu li:nth-child(1) a { width: 226px; }
+
+.tab__menu li:nth-child(2) { background:green; }
+
+.tab__menu li:nth-child(3) { background: navy; }
+
+.tab__menu li:nth-child(4) { background:beige; }
+
+.tab__menu li.active { background-position-y: -107px; }
+
+.week__con1 { display: none; background: #000;}
+.week__con2 { display: none; background: red;}
+
+.week__con3 { display: none; background:green;}
+
+.week__con4 { display: none; background: violet;}
+
+
+
+    </style>
+</head>
+<body>
+        <div class="tab__area" style="">
+                <ul class="tab__menu">
+                    <li class=""><a href="#week1">1주차</a></li>
+                    <li class=""><a href="#week2">2주차</a></li>
+                    <li class=""><a href="#week3">3주차</a></li>
+                    <li class=""><a href="#week4">4주차</a></li>
+                </ul>
+                <a href="#layer-5" class="btn-link-step" data-layer="open">단계별 보상 자세히 보기</a>
+                <div class="week__con1" id="week1" style="display: none;">
+                    
+                </div>
+                <div class="week__con2" id="week2" style="display: none;">
+                  
+                </div>
+                <div class="week__con3" id="week3" style="display: none;">
+                    
+                </div>
+                <div class="week__con4" id="week4" style="display: none;">
+                   
+                </div>
+            </div>
+    <script src="./tab.js"></script>
+</body>
+</html>
