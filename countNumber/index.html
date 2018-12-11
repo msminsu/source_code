@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TweenMax Timeline Animation</title>
+    <script>
+            window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <style>
+        body{text-align: center;}
+        *{margin: 0;padding: 0;}
+        div{position: absolute;font-weight: bold; width: 1048px;height: 615px;}
+
+
+.counter{position: relative;
+left:200px;
+width: 500px;
+height: 500px;
+font-size: 0;
+background: #000;
+}
+span{width: 19px;height: 24px;}
+[data-num *= count]{
+    display: inline-block;
+    background: red;
+    width: 21px;
+    height: 24px;
+    background: url('./number2.png') no-repeat 0 -216px;
+    font-size: 0;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="counter">
+        <span class="num" data-num="count2">2</span>
+        <span data-num="count0">0</span>
+        <span data-num="count1">1</span>
+        <span data-num="count8">8</span>
+        <span data-num="count1">1</span>
+        <span data-num="count2">2</span>
+        <span data-num="count1">1</span>
+        <span data-num="count2">2</span>
+    </div>
+    <script src="./count.js"></script>
+</body>
+</html>
