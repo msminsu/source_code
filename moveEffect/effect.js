@@ -66,16 +66,23 @@ var target = {
     four:{ x : $eff4.position().left , y: $eff4.position().top},
 }
 
-console.log(target);
-function dongdong( target, range){
-   var x_min= range.x ;
-    TweenMax.to( target, 1, { x: makeRandom(range.x,x_max), y: makeRandom(y_min,y_max), ease:Power0.easeNone});
+
+function dongdong( target,range){
+   
+var y_pos = Math.floor( Math.random()*50- range);
+// var y_pos =Math.random()*70-50;
+    TweenMax.to( target, 4, {/*  x: x_pos, */ y: y_pos, ease:Power0.easeInOut});
     // .fromTo($(".title"),  0.2, { scale:5.5, alpha:0},{ scale:1, alpha:1,ease:Power2.easeOut}, "-=0.1")
 
 }
 
 // console.log(makeRandom(x_min,x_max))
-setInterval(function(){ dongdong( $eff1, target.one); }, 1000);
+setInterval(function(){ 
+    dongdong( $eff1, 20); 
+    dongdong( $eff2, 20); 
+    dongdong( $eff3, 20); 
+    dongdong( $eff4, 20); 
+}, 1000);
 /* 
 setInterval(function(){
     dongdong( $eff1, 50);
