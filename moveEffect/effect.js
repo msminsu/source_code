@@ -89,7 +89,6 @@ var target = {
 
 
 function dongdong( target,range){
-   
 var y_pos = Math.floor( Math.random()*50- range);
 // var y_pos =Math.random()*70-50;
     TweenMax.to( target, 4, {/*  x: x_pos, */ y: y_pos, ease:Power0.easeInOut});

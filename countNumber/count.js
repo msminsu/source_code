@@ -11,28 +11,54 @@ var PageMain = (function(){
         var $num =  $('.num');
         var $nums =  $('span');
         var count = 0;
-            var arr = []
+        var arr = [];
+
+        /* $nums.each(function(i){
+           console.log($(this).text());
+        }); */
+
+        
+       
             for(var i = 0; i< 10 ; i++ ){
                 arr.push(i*-23);
             }
 
+            
 
-            for(var j=0; j<10; j++){
-                var elem = $nums[j];
-                TweenMax.to(elem, .4, {
+
+
+            for(var j=0; j<$nums.length; j++){
+                var elem = $nums.eq(j);
+                var val = elem.text();
+                
+            
+                TweenMax.to(elem, .3, {
                     backgroundPosition:"0 0px",
                     ease: Linear.easeNone,
                     repeat: j,
                     onComplete:function(){
-                        onRepeat();
+                        console.log(this._repeat+1);
+                        stopPosition(this.target,this.target.text(),this._repeat+1)
+                        
                     }
                 });
             }
 
             
-            function onRepeat(){
-                count++;
-                console.log(count)
+            function stopPosition(elem, val, t){
+                
+                if(val> 6){
+                    t = 1
+                }
+
+                TweenMax.fromTo(elem, 0.5, {
+                    backgroundPosition:"0 -216px",
+                },
+                {
+                    backgroundPosition:"0 "+arr[val]+"px",
+                    ease: Linear.easeOut,
+                }
+                );
             }
 
             
