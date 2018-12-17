@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TweenMax Timeline Animation</title>
+    <style>
+        .section{width: 100%;height: 700px;}
+        
+        .section-1{background: olive;}
+        .section-2{background: papayawhip;}
+        .section-3{background: wheat;}
+        .section-4{background: aliceblue;}
+        .section-5{background: khaki;}
+
+
+
+
+.select-box .select-list > li span, .select-box .select-tit span { vertical-align: middle; display: inline-block; width: 1px; height: 10px; background: #333; margin: -2px 5px 0; }
+.select-box { position: absolute; top: 159px; left: 273px; width: 580px; z-index: 1; }
+.select-box { position: relative; width: 300px; }
+
+.select-box .select-tit { position: relative; height: 53px; line-height: 53px; text-align: left; font-size: 16px; color: #333333; cursor: pointer; padding: 0 120px 0 15px; overflow: hidden; }
+
+.select-box .select-tit:before { position: absolute; top: 0; right: 62px; width: 53px; height: 53px; background: red; content: ""; display: block; }
+
+.select-box .select-tit[disabled] { cursor: default; color: #000; }
+
+.select-box .select-tit.active:before { background-position-x: -53px; }
+
+.select-box .select-tit.on { color: #fff; }
+
+.select-box .select-list { display: none; background: #fff; border: 1px solid #173c62; border-radius: 3px; overflow: hidden; }
+
+.select-box .select-list.active { display: block; }
+
+.select-box .select-list li { font-size: 15px; padding: 0 15px; height: 40px; line-height: 40px; color: #333333; border-top: 1px solid #d6e7ff; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.select-box .select-list li:hover { background: #d6e7ff; }
+
+.select-box .select-list li:first-child { border-top: none; }
+
+.select-box .btn-confirm { text-align: left; text-indent: -9999em; white-space: nowrap; overflow: hidden; position: absolute; top: 0; right: 0; width: 62px; height: 53px; background: green; display: block; }
+
+
+
+.tab-wrap { position: absolute; top: 382px; left: 50%; width: 1100px; height: 390px; margin-left: -550px; margin-left: -551px; }
+
+.tab-wrap .tab-menu { display: table; width: 100%; }
+
+.tab-wrap .tab-menu li { float: left; }
+
+.tab-wrap .tab-menu li button { text-align: left; text-indent: -9999em; white-space: nowrap; overflow: hidden; display: block; width: 183px; height: 79px; background: red; }
+
+.tab-wrap .tab-menu li:nth-child(2) > button { width: 184px; background-position-x: -183px; }
+
+.tab-wrap .tab-menu li:nth-child(3) > button { background-position-x: -367px; }
+
+.tab-wrap .tab-menu li:nth-child(4) > button { width: 184px; background-position-x: -550px; }
+
+.tab-wrap .tab-menu li:nth-child(5) > button { background-position-x: -733px; }
+
+.tab-wrap .tab-menu li:nth-child(6) > button { background-position-x: -917px; }
+
+.tab-wrap .tab-menu li.active > button { background-position-y: 0; }
+
+.tab-wrap .tab-contents .tab-content { display: none; }
+
+.tab-wrap .tab-contents .tab-content.active { display: block; }
+
+.tab-wrap .tab-contents .tab-content ul { padding: 30px 16px; }
+
+.tab-wrap .tab-contents .tab-content ul li { position: relative; float: left; width: 127px; height: 190px; margin: 0 3px; text-align: center; text-indent: 0; font-size: 14px; }
+
+.tab-wrap .tab-contents .tab-content ul li:nth-child(3) { width: 129px; }
+
+.tab-wrap .tab-contents .tab-content ul li .day { margin: 1px auto 18px; height: 30px; line-height: 30px; color: #d9e7ff; }
+
+.tab-wrap .tab-contents .tab-content ul li p { color: #8c9fbf; margin-bottom: 5px; line-height: 16px; }
+
+.tab-wrap .tab-contents .tab-content ul li p.complete { color: #5c6574; text-decoration: line-through; }
+
+.tab-wrap .tab-contents .tab-content ul li p.result strong { margin-top: 13px; font-size: 36px; color: #e8232d; font-weight: normal; }
+
+.tab-wrap .tab-contents .tab-content ul li button { position: absolute; bottom: 15px; left: 50%; width: 109px; height: 45px; margin-left: -54.5px; background:gray; text-align: left; text-indent: -9999em; white-space: nowrap; overflow: hidden; }
+
+.tab-wrap .tab-contents .tab-content ul li button.disable { background-position-y: -45px; cursor: default; }
+
+.tab-wrap .tab-contents .tab-content ul li button.complete { bottom: 10px; height: 63px; background-position-y: -90px; cursor: default; }
+    </style>
+    <script>
+            window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+</head>
+    <body>
+        <div id="contents">
+            <section data-id="section-1" class="section section-1" data-contents="con"></section>
+            <section data-id="section-2" class="section section-2" data-contents="con">
+                
+                <div id="select-1" class="select-box">
+                    <div class="select-tit" data-select="title" data-value="null">리스트 선택해주세요.</div>
+                    <ul class="select-list" data-select="listWrap">
+                            <li data-value="1">1캐릭터명 열두글자 <span></span> 서버 <span></span> 직업 <span></span> 레벨 <span></span> O성 <span></span> 문파명은 최대이십글자</li>
+                            <li data-value="2">2캐릭터명 열두글자 <span></span> 서버 <span></span> 직업 <span></span> 레벨 <span></span> O성 <span></span> 문파명은 최대이십글자</li>
+                            <li data-value="3">3캐릭터명 열두글자 <span></span> 서버 <span></span> 직업 <span></span> 레벨 <span></span> O성 <span></span> 문파명은 최대이십글자</li>
+                            <li data-value="4">4캐릭터명 열두글자 <span></span> 서버 <span></span> 직업 <span></span> 레벨 <span></span> O성 <span></span> 문파명은 최대이십글자</li>
+                            <li data-value="5">5캐릭터명 열두글자 <span></span> 서버 <span></span> 직업 <span></span> 레벨 <span></span> O성 <span></span> 문파명은 최대이십글자</li>
+                        </ul>
+                    </ul>
+                    <button href="javascript:;" class="btn-confirm btn-choose-character">확인</button>
+                </div>
+
+            </section>
+            <section data-id="section-3" class="section section-3" data-contents="con"></section>
+            <section data-id="section-4" class="section section-4" data-contents="con">
+
+                    <div class="tab-wrap" id="tab-check">
+                            <ul class="tab-menu" data-tab="tabWrap">
+                                <li data-tab="tab-1" class="active"><button>1탭메뉴</button></li>
+                                <li data-tab="tab-2"><button>2탭메뉴</button></li>
+                                <li data-tab="tab-3"><button>3탭메뉴</button></li>
+                                <li data-tab="tab-4"><button>4탭메뉴</button></li>
+                                <li data-tab="tab-5"><button>5탭메뉴</button></li>
+                                <li data-tab="tab-6"><button>6탭메뉴</button></li>
+                            </ul>
+                            <div class="tab-contents" data-tab="tabContents">
+                                <div class="tab-content active" data-tab="tab-1">
+                                   tab-content- 1
+                                </div>
+                    
+                                <div class="tab-content" data-tab="tab-2">
+                                   tab-content- 2
+                                </div>
+                    
+                                <div class="tab-content" data-tab="tab-3">
+                                   tab-content- 3
+                                </div>
+                    
+                                <div class="tab-content" data-tab="tab-4">
+                                   tab-content- 4
+                                </div>
+                    
+                                <div class="tab-content" data-tab="tab-5">
+                                    tab-content- 5
+                                </div>
+                    
+                                <div class="tab-content" data-tab="tab-6">
+                                   tab-content- 6
+                                </div>
+                    
+                            </div>
+                        </div>
+
+            </section>
+            <section data-id="section-5" class="section section-5" data-contents="con"></section>
+        </div>
+
+        <aside id="quickMenu" th:unless="${ncDevice} eq 'pcIngame'" class="quick-menu">
+            <ul class="menu_list" data-remote="wrap">
+                <li data-list="list"><a href="#header">TOP</a></li>
+                <li data-list="list"><a href="#section-4">세션 4</a></li>
+                <li><a href="" >페이지 이동</a></li>
+            </ul>
+        </aside>
+        
+    <script  type="module" src="./app.js"></script>
+    </body>
+</html>
