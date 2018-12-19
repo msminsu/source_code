@@ -14,9 +14,6 @@ $(document).ready(function () {
 
     CustomEvent.prototype = window.Event.prototype;
     window.CustomEvent = CustomEvent;
-
-    
-
 });
 
 $(document).ready(function () {
