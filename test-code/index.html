@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <title>JS Bin</title>
+    <style>
+        .right_wrap {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-left: 0.5px solid;
+            background-color: #fff;
+        }
+
+        #scroll_bar {
+            position: fixed;
+            width: 200px;
+            top: 0;
+            height: 100%;
+            z-index: 999;
+        }
+
+        #scroll_bar .p_toggle {
+            position: absolute;
+            left: -26px;
+            top: 50%;
+            margin-top: -28px;
+            width: 30px;
+            height: 56px;
+            cursor: pointer;
+        }
+        .p_toggle img:nth-child(1){padding: 10px; border:1px solid red}
+        .p_toggle img:nth-child(2){padding: 10px; border:1px solid green}
+
+    </style>
+</head>
+
+<body>
+    <div class="right_banner" id="scroll_bar" style="right:0px;">
+
+        <div id="btnclick" class="p_toggle">
+            <img src="img/icon/close.png">
+            <img src="img/icon/open.png" style="display: none">
+        </div>
+        <div class="right_wrap">
+            <div class="info_box">
+                <p class="info_member">
+                    <a href="#">LOGIN</a>&nbsp;&nbsp;<a href="#">JOIN</a><br>
+                    <a href="#">CART</a>&nbsp;&nbsp;<a href="#">ORDER</a><br><br>
+                    <span class="join">회원가입시 5000원 적립!</span>
+                </p>
+                <div class="info_bnr">
+                    <div class="bn_wrap">
+                        <a href="#"><img src="img/banner.jpg" alt=event width="150" height="170"></a>
+                    </div>
+                </div>
+
+                <p class="cs_info">
+                    <strong> 고객센터 안내 </strong><br>
+                    <span class="strong">000-0000-0000</span><br><br><br>
+                    Monday - Friday <br>
+                    OPEN 10am ~ close 6pm<br>
+                    Lunch 12pm ~ 1pm <br>
+                    <span>주말·공휴일 휴무</span><br><br><br>
+                </p>
+                <p class="bank_info">
+                    <strong class="strong">계좌안내</strong><br>
+                    <strong>우리은행 <br>
+                        0000-0000-0000</strong><br>
+                    <span> 예금주 : 주식회사 ㅇㅇㅇ</span><br>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        $(document).ready(function () {
+
+            var isOpen = true; //열린상태
+            var btnImg = $('.p_toggle img');
+
+            $("#btnclick").click(function () {
+                
+                if (isOpen === true) {// 열려 있으면...
+                        $(".right_banner").animate({ right: -200 }, 500,function(){
+                            btnImg.toggle();
+                        });
+                    } else if (isOpen === false) {// 닫혀 있으면 ...
+                        $(".right_banner").animate({ right: 0 }, 500,function(){
+                            btnImg.toggle();
+                        });
+                    }
+
+                isOpen = !isOpen;
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>

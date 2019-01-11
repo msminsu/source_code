@@ -16,22 +16,51 @@
 					//player2.play();
 				});
 			 
-				var count = 3; // 
+				var count = 0; // 
+
+				 function checkPoint( count ){
+
+				 }
+
 				function rotation(){
 				
 					var rotateDeg = randomize(0, 360);
 					
 					var  rotateCount = 360 * 10 + rotateDeg;
 
-					if( rotateDeg > 0 && rotateDeg <= 18 ){
-						count--;
+					if( count > 0 ){
+						if( rotateDeg > 0 && rotateDeg <= 18 ){
+							count--;
+						}
+						else if( rotateDeg > 126 && rotateDeg <=198){
+							count--;
+						}
+						else if( rotateDeg > 342 && rotateDeg <=360){
+							count--;
+						}
+					}else{
+						
+						console.log('이전 ', rotateDeg);
+
+						if( rotateDeg > 0 && rotateDeg <= 18 ){
+							rotation();
+							console.log('다시', rotateDeg);
+							return;
+							
+						}
+						else if( rotateDeg > 126 && rotateDeg <=198){
+							rotation();
+							console.log('다시2', rotateDeg)
+							return;
+						}
+						else if( rotateDeg > 342 && rotateDeg <=360){
+							rotation();
+							console.log('다시3', rotateDeg)
+							return;
+						}
+						
 					}
-					else if( rotateDeg > 126 && rotateDeg <=198){
-						count--;
-					}
-					else if( rotateDeg > 342 && rotateDeg <=360){
-						count--;
-					}
+
 
 					console.log(rotateDeg, count);
 
