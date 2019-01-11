@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>룰렛게임</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jQueryRotate.js"></script>
+		<script type="text/javascript">
+			window.onload = function(){
+     
+				var pArr = ["10 마일리지","30 마일리지","1,000원 쿠폰","스탬프 1장","10 마일리지","10 마일리지","스탬프 3장","스탬프 1장","무료배송 쿠폰","스탬프 2장"];
+			 
+				$('#start_btn').click(function(){
+					rotation();
+					//player.play();
+					//player2.play();
+				});
+			 
+				var count = 3; // 
+				function rotation(){
+				
+					var rotateDeg = randomize(0, 360);
+					
+					var  rotateCount = 360 * 10 + rotateDeg;
+
+					if( rotateDeg > 0 && rotateDeg <= 18 ){
+						count--;
+					}
+					else if( rotateDeg > 126 && rotateDeg <=198){
+						count--;
+					}
+					else if( rotateDeg > 342 && rotateDeg <=360){
+						count--;
+					}
+
+					console.log(rotateDeg, count);
+
+					$("#image").rotate({
+					  angle:0,
+					  animateTo: rotateCount,
+					  center: ["50%", "50%"],
+					  easing: $.easing.easeInOutElastic,
+					  callback: function(){
+									var n = $(this).getRotateAngle();
+									//endAnimate(n);
+								},
+					  duration:5000
+				   });
+
+				}
+			 
+				function endAnimate($n){
+					var n = $n;
+					//$('#result_id').html("<p>움직인각도:" + n + "</p>");
+					var real_angle = n%360 +18;
+					var part = Math.floor(real_angle/36);
+					player.pause();
+					
+					if(part == "0"){
+						player3.play();
+					}else if (part == "2"){
+						player3.play();
+					}else if (part == "4"){
+						player3.play();
+					}else if (part == "6"){
+						player3.play();
+					}else if (part == "8"){
+						player3.play();
+					}else{
+						player4.play();
+					}
+				 
+					//$('#result_id2').html("<p>상품범위:" + part + "</p>");
+					
+					var nameuser = "신광섭 나의 행운은<br />"
+
+					if(part < 1){
+						$('#result_id3').html("<p>" + nameuser + pArr[0] + "</p>");
+						return;
+					}
+			 
+					if(part >= 10){
+						$('#result_id3').html("<p>" + nameuser + pArr[pArr.length-1] + "</p>");
+						return;
+					}
+			 
+					$('#result_id3').html("<p>" + nameuser + pArr[part] + "</p>");
+					
+				}
+				
+				function randomize($min, $max){
+					return Math.floor(Math.random() * ($max - $min + 1)) + $min;
+				}
+				
+			};	
+		</script>
+		<style type="text/css">
+			body{background:#f0f9ff;}
+			#wrap{background:url(img/bg.gif) 0 0 no-repeat;position:relative;width:555px;top:100px;margin:0 auto;}
+			#image{margin:58px 24px;z-index:10;}
+			#n_id{position:absolute;left:261px;top:25px;z-index:20;}
+			#start_btn{position:absolute;left:194px;top:230px;}
+			#result_id3{width:86%;margin:0 auto;font-weight:bold;font-size:44px;text-align:center;}
+			#player, #player2, #player3, #player4{display:none;}
+		</style>
+	</head>
+
+	<body>
+		<div id="wrap">
+			<img src="img/roul_img.png" id="image" />
+			<img src="img/roul_pin.png" id="n_id" /><br />
+			<img src="img/roul_btn.png" id="start_btn" />
+			<div id="result_id3"></div>
+		</div>
+		<!-- <audio id="player" controls="controls" loop="loop" preload="auto">
+			<source src="img/rur.ogg" type="audio/ogg">
+		</audio>
+		<audio id="player2" controls="controls" preload="auto">
+			<source src="img/start.ogg" type="audio/ogg">
+		</audio>
+		<audio id="player3" controls="controls" preload="auto">
+			<source src="img/good.ogg" type="audio/ogg">
+		</audio>
+		<audio id="player4" controls="controls" preload="auto">
+			<source src="img/sad.wav" type="audio/wav">
+		</audio> -->
+	</body>
+</html>

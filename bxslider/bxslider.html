@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+	<title>Document</title>
+	<style>
+		.main7_con1{position:relative;width:766px;height:500px;margin:0 auto;padding-top:50px 116px 0 116px;}
+.main7_con1 .main7_slider {display:block;overflow:hidden;}
+.main7_con1 .main7_slider li {float:left;background:url("https://bxslider.com/assets/images/coffee1.jpg") no-repeat;background-size:cover;width:766px;height:500px;}
+
+.con_slider_main7 span {display:block; cursor: pointer;position:absolute;}
+
+#main7_prev {width:49px; height: 97px;background:green;top:50%; margin-top:-48px;left:-100px;}
+#main7_next {width:49px; height: 97px;background:orange;top:50%; margin-top:-48px;right:-100px;}
+
+	</style>
+</head>
+
+<body>
+	<h1>VScode has a build in support for Git</h1>
+	<div class="bxslider">
+		<div><img src="https://bxslider.com/assets/images/coffee1.jpg"></div>
+		<div><img src="https://bxslider.com/assets/images/coffee2.jpg"></div>
+		<div><img src="https://bxslider.com/assets/images/coffee3.jpg"></div>
+	</div>
+
+
+	<div class="main7_con1">
+		<ul class="main7_slider"> 
+		 <li>1</li>
+		 <li>2</li>
+		 <li>3</li>
+		 <li>4</li>
+		</ul>
+		<div class="con_slider_main7">
+		 <span id="main7_prev"></span>
+		 <span id="main7_next"></span>
+		</div>
+	   </div>
+
+	<script>
+	/* 	$(document).ready(function () {
+			$('.bxslider').bxSlider({
+				minSlides: 3,
+				maxSlides: 3,
+				slideWidth: 1200,
+				ticker: true,
+				speed: 30000,
+				tickerHover: true,
+				useCSS: false// ie issue 오버시 끊김 현상 해결
+			});
+		}) */
+
+		var slider = $('.main7_slider').bxSlider({
+  
+  auto: true,
+  speed: 500,
+  pause: 2000,
+  minSlides: 4,
+  maxSlides: 4,
+  autoControls: true,
+  pager: false
+ });
+
+ $('#main7_next').on('click',function(){
+	  slider.goToNextSlide();
+	  slider.startAuto();
+    //   return false;
+    });
+
+    $('#main7_prev').on('click',function(){
+	  slider.goToPrevSlide();
+	   slider.startAuto();
+    //   return false;
+    });
+
+	</script>
+</body>
+
+</html>
