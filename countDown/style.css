@@ -1,0 +1,124 @@
+
+.flip-counter-con {
+    position: absolute;
+    top: 491px;
+    left: 50%;
+    width: 1009px;
+    height: 110px;
+    margin-left: -504.5px;
+    margin-left: -487px;
+    overflow: hidden;
+  }
+  
+  #counter.count-down {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1009px;
+    height: 110px;
+    background: url("./counter_bg.png") no-repeat 0 0;
+  }
+  #counter.count-down .flip {
+    margin-right: 4px;
+  }
+  #counter.count-down .flip[data-index="1"] {
+    margin-right: 58px;
+  }
+  #counter.count-down .flip[data-index="3"] {
+    margin-right: 58px;
+  }
+  #counter.count-down .flip[data-index="5"] {
+    margin-right: 58px;
+  }
+  #counter.d-day {
+    position: absolute;
+    top: 0;
+    left: 176px;
+    width: 657px;
+    height: 110px;
+    background: url("./counter_bg2.png") no-repeat 0 0;
+  }
+  #counter.d-day .flip[data-index="0"] > div > div, #counter.d-day .flip[data-index="1"] > div > div, #counter.d-day .flip[data-index="2"] > div > div {
+    background-image: url("./counter_number_brown.png") !important;
+  }
+  #counter.d-day .flip[data-index="0"] {
+    margin-right: 68px;
+  }
+  #counter.d-day .flip[data-index="2"] {
+    margin-right: 68px;
+  }
+  
+  .flip-counter .flip {
+    position: relative;
+    width: 98px;
+    height: 110px;
+    overflow: visible !important;
+    float: left;
+    text-align: left;
+    text-indent: -9999em;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .flip-counter .flip > div {
+    position: absolute;
+    width: 98px;
+    height: 110px;
+    perspective: 200px;
+  }
+  .flip-counter .flip > div > div {
+    position: absolute;
+  }
+  .flip-counter .flip > div > div.up {
+    top: 0;
+    width: 98px;
+    height: 51px;
+    background: url("./counter_number.png") no-repeat 0 0;
+    transform-origin: 50% 100%;
+  }
+  .flip-counter .flip > div > div.down {
+    top: 52px;
+    width: 100%;
+    height: 58px;
+    background: url("./counter_number.png") no-repeat 0 -52px;
+    transform-origin: 50% 0;
+  }
+  .flip-counter .flip > div[data-num="1"] > div {
+    background-position-x: -98px;
+  }
+  .flip-counter .flip > div[data-num="2"] > div {
+    background-position-x: -196px;
+  }
+  .flip-counter .flip > div[data-num="3"] > div {
+    background-position-x: -294px;
+  }
+  .flip-counter .flip > div[data-num="4"] > div {
+    background-position-x: -392px;
+  }
+  .flip-counter .flip > div[data-num="5"] > div {
+    background-position-x: -490px;
+  }
+  .flip-counter .flip > div[data-num="6"] > div {
+    background-position-x: -588px;
+  }
+  .flip-counter .flip > div[data-num="7"] > div {
+    background-position-x: -686px;
+  }
+  .flip-counter .flip > div[data-num="8"] > div {
+    background-position-x: -784px;
+  }
+  .flip-counter .flip > div[data-num="9"] > div {
+    background-position-x: -882px;
+  }
+  .flip-counter .flip:after {
+    display: block;
+    position: absolute;
+    top: 51px;
+    left: 9px;
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, #000, #9fa2a7, #000);
+    content: "";
+  }
+  .flip-counter .flip[data-index="0"] > div > div, .flip-counter .flip[data-index="1"] > div > div {
+    background-image: url("./counter_number_brown.png") !important;
+  }
