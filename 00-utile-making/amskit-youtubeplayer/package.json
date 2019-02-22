@@ -1,8 +1,8 @@
 {
-  "name": "promokit-layer",
-  "version": "1.0.8",
-  "description": "layer module for promotion",
-  "main": "dist/promokit-layer.js",
+  "name": "promokit-youtubeplayer",
+  "version": "1.0.13",
+  "description": "youtube player for promotion",
+  "main": "dist/promokit-youtubeplayer.js",
   "scripts": {
     "dev": "webpack-dev-server --open --mode=development",
     "build": "webpack --mode=production"
@@ -11,16 +11,10 @@
     "type": "git",
     "url": ""
   },
-  "keywords": [
-    "layer",
-    "promotion",
-    "promokit"
-  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.6",
-    "@babel/plugin-transform-object-assign": "^7.2.0",
     "@babel/preset-env": "^7.1.6",
     "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^0.1.19",
@@ -28,6 +22,7 @@
     "expose-loader": "^0.7.5",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "jquery": "^3.3.1",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
@@ -38,6 +33,8 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
-    "promokit-util": "^1.1.0"
+    "jquery": "^3.3.1",
+    "promokit-util": "^1.1.0",
+    "screenfull": "^3.3.3"
   }
 }
