@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, width=device-width, initial-scale=1.0"/>
+  <title>test page</title>
+  <script src="https://wstatic-cdn.plaync.com/common/js/lib/jquery-3.1.0.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .box {
+      height: 2000px;
+      background: red;
+    }
+
+    .layer-con {
+      position: relative;
+      padding: 40px 10px 0 10px;
+    }
+
+    .layer-con img {
+      max-width: 100%;
+    }
+
+    .close {
+      width: 40px;
+      height: 40px;
+      font-size: 0;
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: none;
+      border: 0;
+      outline: 0;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .close:before {
+      content: "";
+      margin: -1px 0 0 -20px;
+      width: 40px;
+      height: 2px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: #fff;
+      transform: rotate(45deg);
+      transition: false;
+    }
+
+    .close:after {
+      content: "";
+      margin: -1px 0 0 -20px;
+      width: 40px;
+      height: 2px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: #fff;
+      transform: rotate(-45deg);
+      transition: false;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box"></div>
+<button class="open">레이어 열기</button>
+<div class="box"></div>
+<button class="open">레이어 열기</button>
+<div class="box"></div>
+
+<script type="text/template" class="layer-con1">
+  <div class="layer-con">
+    <button class="close">닫기</button>
+    <img src="https://wstatic-cdn.plaync.com/promo/aion/history/2018/181128_color/img/page3/page3_img1.jpg" class="open2" alt="">
+  </div>
+</script>
+
+<script type="text/template" class="layer-con2">
+  <div class="layer-con" style="color:white">
+    test message
+  </div>
+</script>
+</body>
+</html>

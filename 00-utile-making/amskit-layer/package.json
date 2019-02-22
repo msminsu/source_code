@@ -1,0 +1,43 @@
+{
+  "name": "promokit-layer",
+  "version": "1.0.8",
+  "description": "layer module for promotion",
+  "main": "dist/promokit-layer.js",
+  "scripts": {
+    "dev": "webpack-dev-server --open --mode=development",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://demoon2016@git.korea.ncsoft.corp/scm/frontend_develop/promokit-layer.git"
+  },
+  "keywords": [
+    "layer",
+    "promotion",
+    "promokit"
+  ],
+  "author": "Moon kyungtae <demoon2016@ncsoft.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/preset-env": "^7.1.6",
+    "babel-loader": "^8.0.4",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
+    "expose-loader": "^0.7.5",
+    "file-loader": "^2.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
+  },
+  "dependencies": {
+    "promokit-util": "^1.1.0"
+  }
+}
