@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <title>오목</title>
+  <script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+<script>
+//함수기반 오목.
+$(function(){
+	var maxsize = 9;
+	var user = 1;//1:black, 2:white
+	var blackarr = [];
+	var whitearr = [];
+
+	//오목판 세팅.
+	for(var i =0;i<10;i++){
+		$("#board").append("<tr></tr>");
+		if(i==0){
+			$("#board tr").eq(i).addClass("topline");
+		}else if(i==maxsize){
+			$("#board tr").eq(i).addClass("bottomline");
+		}
+		
+		for(var j=0;j<10;j++){
+			$("#board tr:nth-child("+(i+1)+")").append("<td data-list='"+i+j+"'></td>");
+			if(i==0){
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("lefttop");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("righttop");
+				}else{
+					$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("top");
+				}
+			}else if(i==maxsize){
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("leftbottom");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("rightbottom");
+				}else{
+					$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("bottom");
+				}
+			}else{
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("left");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("right");
+				}
+			}
+		}
+	}
+	
+	$("td").click(function(){
+		resetBG(this);
+		$(".gametxt").html('');
+		if(!this.state){
+			if(user==1){
+				$(this).append("<img src='img/black.png'>");
+				blackarr.push($(this).attr('data-list'));				
+				//승리판단
+				isWin(user,blackarr);
+			}else{
+				$(this).append("<img src='img/white.png'>");
+				whitearr.push($(this).attr('data-list'));
+				//승리판단.
+				isWin(user,whitearr);
+			}
+			this.state = 1;			
+			
+			
+			//턴바꾸기
+			user==1 ? user = 2 : user =1;
+		}else{
+			$(".gametxt").html('이미 둔 곳 입니다.');
+		}		
+	});
+	
+	var originBG;
+	$("td").hover(function(){
+		//origin background
+		originBG = $(this).css('background-image');
+
+		if(!this.state){
+			if(user==1)
+				$(this).css({'background-image':'url(./img/black.png)','opacity':'0.2'});
+			else
+				$(this).css({'background-image':'url(./img/white.png)','opacity':'0.2'});
+		}
+	},function(){
+		if(!this.state)
+			$(this).css({'background-image':originBG,'opacity':'1'});
+	});
+
+	function resetBG(obj){
+		$(obj).css({'background-image':originBG,'opacity':'1'});
+	}
+	
+	function isWin(user,arr){
+			arr.sort();
+			if(arr.length >=5){
+				var linecount=0; //동일 행판단.
+				//0도 판단.
+				arr.some(function(item){
+					//기준점.
+					var srci = item.substring(0,1);//행번호.
+					var srcj = item.substring(1,2);//열번호.
+					var setWinner = false;
+					linecount = 0;
+					arr.some(function(item2){
+						//기준점과 다음돌 비교.
+						var targeti = item2.substring(0,1);
+						var targetj = item2.substring(1,2);
+						if(srci == targeti && srcj == targetj){
+							//첫번째 동일 돌 카운트1.
+							linecount = 1;
+						}else{
+							if(srci == targeti && Math.abs(srcj-targetj)<5){
+								linecount++;
+								console.log('0도 linecount:'+linecount);
+							}
+						}
+						if(linecount ==5){
+							winPlayer(user);
+							console.log('0도승리');
+							setWinner =true;
+							return item2;
+						}
+					});
+					if(setWinner)
+						return item;
+				});
+
+				//90도 판단.
+				var linecount=0; //동일 열판단.
+				//0도 판단.
+				arr.some(function(item){
+					//기준점.
+					var srci = item.substring(0,1);//행번호.
+					var srcj = item.substring(1,2);//열번호.
+					var setWinner = false;
+					linecount = 0;
+					arr.some(function(item2){
+						//기준점과 다음돌 비교.
+						var targeti = item2.substring(0,1);//비교대상 행번호
+						var targetj = item2.substring(1,2);//비교대상 열번호
+						if(srci == targeti && srcj == targetj){
+							//첫번째 동일 돌 카운트1.
+							linecount = 1;
+						}else{
+							if(Math.abs(srci-targeti)<5 && srcj==targetj )
+								linecount++;
+						}
+						if(linecount ==5){
+							winPlayer(user);
+							console.log('90도승리');
+							setWinner =true;
+							return item2;
+						}
+					});
+					if(setWinner)
+						return item;
+				});
+				//45도 판단.
+				var linecount=0; //45도 판단카운트.
+				arr.some(function(item){
+					//기준점.
+					var srci = item.substring(0,1);//행번호.
+					var srcj = item.substring(1,2);//열번호.
+					var setWinner = false;
+					linecount = 0;
+					arr.some(function(item2){
+						//기준점과 다음돌 비교.
+						var targeti = item2.substring(0,1);
+						var targetj = item2.substring(1,2);
+						if(srci == targeti && srcj == targetj){
+							//첫번째 동일 돌 카운트1.
+							linecount = 1;
+						}else{
+							var stepi=0; //계단차이값 구하기.
+							var stepj=0;
+							if(srci>targeti && srcj<targetj){
+								stepi = Math.abs(srci - targeti);
+								stepj = Math.abs(srcj - targetj);	
+								if(stepi == stepj && stepi<5)
+									linecount++;
+							}
+							if(srci<targeti && srcj>targetj){
+								stepi = Math.abs(srci - targeti);
+								stepj = Math.abs(srcj - targetj);	
+								if(stepi == stepj && stepi<5)
+									linecount++;
+							}							
+						}
+						if(linecount ==5){
+							winPlayer(user);
+							console.log('45도승리');
+							setWinner =true;
+							return item2;
+						}
+					});
+					if(setWinner)
+						return item;
+				});
+
+				//135도 판단.
+				var linecount=0; //135도 판단카운트.
+				arr.some(function(item){
+					//기준점.
+					var srci = item.substring(0,1);//행번호.
+					var srcj = item.substring(1,2);//열번호.
+					var setWinner = false;
+					linecount = 0;
+					arr.some(function(item2){
+						//기준점과 다음돌 비교.
+						var targeti = item2.substring(0,1);
+						var targetj = item2.substring(1,2);
+						if(srci == targeti && srcj == targetj){
+							//첫번째 동일 돌 카운트1.
+							linecount = 1;
+						}else{
+							var stepi=0; //계단차이값 구하기.
+							var stepj=0;
+							if(srci<targeti && srcj<targetj){
+								stepi = Math.abs(srci - targeti);
+								stepj = Math.abs(srcj - targetj);	
+								if(stepi == stepj && stepi<5)
+									linecount++;
+							}
+							if(srci>targeti && srcj>targetj){
+								stepi = Math.abs(srci - targeti);
+								stepj = Math.abs(srcj - targetj);	
+								if(stepi == stepj && stepi<5)
+									linecount++;
+							}							
+						}
+						if(linecount ==5){
+							winPlayer(user);
+							console.log('135도승리');
+							setWinner =true;
+							return item2;
+						}
+					});
+					if(setWinner)
+						return item;
+				});
+			}		
+	}
+
+	function winPlayer(user){
+		if(user == 1){
+			$(".gametxt").html('black 플레이어가 승리했습니다.');			
+		}else{
+			$(".gametxt").html('white 플레이어가 승리했습니다.');
+		}
+		$(".gametxt").append("<input type='button' value='다시하기' id='replay'>");
+	}
+	$(document).on("click","#replay",function(){ 
+		location.reload();
+	});
+});
+</script>
+ </head>
+ <body>
+  <table id="board" cellpadding="0" cellspacing="0">
+	<caption>오목게임</caption>	
+  </table>
+  <div class="gametxt"></div>
+ </body>
+</html>

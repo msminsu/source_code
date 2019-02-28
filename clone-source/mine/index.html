@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mine Sweeper</title>
+  
+  
+  
+      <link rel="stylesheet" href="./style.css">
+
+  
+</head>
+
+<body>
+
+  <div id="statistic">
+  <div>
+    🚩 폭탄표시<br/>
+    <p id="flags-count">0</p>
+  </div>
+  <div>
+    ✅  없앤박스
+    <p id="swept-unit-count">0</p>
+  </div>
+  <div>
+    🕑  경과시간
+    <p id="time-counter">00:00:00</p>
+  </div>
+</div>
+<div id="mine-sweeper-grid"></div>
+<div class="btn-group">
+  <button id="change-mode">제거 Mode</button>
+  <button id="new-game">새 게임</button>
+</div>
+
+<div id="new-game-modal" class="modal">
+  <div class="wrapper">
+    <h1>New Game</h1>
+    <label>
+      Rows <small>1 ~ 30 Rows</small><br/>
+      <input name="rows" type="number" min="1" max="30" value="20">
+    </label>
+    <label>
+      Columns <small>1 ~ 30 Columns</small><br/>
+      <input name="cols" type="number" min="1" max="30" value="20">
+    </label>
+    <label>
+      Mines <small>1 ~ <span id="maximum-mines">100</span> Mines</small><br/>
+      <input name="mines" type="number" min="1" max="5000" value="50">
+    </label>
+    <button id="start-game">Start Game</button>
+  </div>
+</div>
+
+<div id="success-modal" class="modal">
+  <div class="wrapper">
+    <h1>Congratulations!</h1>
+    <p>You've made it in <span id="result-time"></span> !</p>
+    <button id="resume-btn">Resume</button>
+  </div>
+</div>
+  
+  
+
+    <script  src="./index.js"></script>
+
+
+
+
+</body>
+
+</html>
