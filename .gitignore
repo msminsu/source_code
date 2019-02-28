@@ -1,8 +1,5 @@
 .history/
 
-
-othello/
-
 node_modules/
 .idea/
 package-lock.json
