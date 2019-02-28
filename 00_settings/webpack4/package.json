@@ -1,0 +1,16 @@
+{
+  "name": "webpack4",
+  "version": "1.0.0",
+  "description": "- 설정\r - 사용법\r - 메서드",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  }
+}
