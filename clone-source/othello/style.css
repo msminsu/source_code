@@ -1,0 +1,38 @@
+*{
+	padding:0;
+	margin:0;
+}
+#board{
+	margin:40px auto 0;
+	border-collapse:collapse;
+	text-align:center;
+	width:410px;
+	border-spacing: 0;
+	position:relative;
+}
+#board caption{
+	padding-bottom:40px;
+}
+#board td{
+	border:1px solid;
+	width:40px;
+	height:40px;
+}
+#board td img{
+	text-align:center;
+	vertical-align:middle;
+	z-index:10;
+}
+#board .left{
+	position:absolute;
+	padding-top:40px;
+}
+#board .top{
+	position:absolute;
+	padding-top:20px;
+	margin-left:-20px;
+}
+.gametxt{
+	width:410px;
+	margin:0 auto;
+}

@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <title>오델로</title>
+  <script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+<script>
+
+$(function(){
+	var user = 1;//1:black, 2:white
+	var arr = new Array(10);
+   for (var i = 0; i < arr.length; i++) {
+       arr[i] = new Array(10);
+   }
+
+	var blackarr = [];
+	var whitearr = [];
+
+	//오델로판 세팅.
+	for(var i =0;i<10;i++){
+		$("#board").append("<tr></tr>");
+		
+		for(var j=0;j<10;j++){
+			$("#board tr").eq(i).append("<td data-list='"+i+j+"'></td>");
+			arr[i][j]=0;
+			if(i==4 && j==4){
+				$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").append("<img src='img/black.png'>");
+				$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").state = 1;
+				$("#board tr:nth-child("+(i+1)+") td:last").get(0).state = 1;
+				arr[i][j]=1;
+			}else if(i==4 && j==5){
+				$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").append("<img src='img/white.png'>");
+				$("#board tr:nth-child("+(i+1)+") td:last").get(0).state = 1;
+				arr[i][j]=2;
+			}else if(i==5 && j==4){
+				$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").append("<img src='img/white.png'>");
+				$("#board tr:nth-child("+(i+1)+") td:last").get(0).state = 1;
+				arr[i][j]=2;
+			}else if(i==5 && j==5){
+				$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").append("<img src='img/black.png'>");
+				$("#board tr:nth-child("+(i+1)+") td:last").get(0).state = 1;
+				arr[i][j]=1;
+			}
+		}
+
+	}
+	for(var i =0; i<10;i++){
+		$("#board").append("<div class='left'>"+i+"</div>");
+		$("#board .left").eq(i).css({"top":(i+1)*40+"px","left":"-20px"});
+		$("#board").append("<div class='top'>"+i+"</div>");
+		$("#board .top").eq(i).css({"top":"10px","left":(i+1)*40+"px"});
+	}
+	
+
+	
+	$("td").click(function(){
+		$(".gametxt").html('');
+		resetBG(this);
+		if(!this.state){
+			//둘 수 있는 곳인지 판단.
+			
+			var check = isPossible(user,this);
+			if(check ==false){
+				$(".gametxt").html('둘 수 없는 곳입니다.');
+				return;
+			}else{
+				$(".gametxt").html('둘 수 있는 곳입니다.');
+			}
+		
+			var srci = Number($(this).attr('data-list').substring(0,1));
+			var srcj = Number($(this).attr('data-list').substring(1,2));
+			if(user==1){
+				$(this).append("<img src='img/black.png'>");
+				arr[srci][srcj] = 1;
+				//승리판단
+				isWin(user,blackarr);
+			}else{
+				$(this).append("<img src='img/white.png'>");
+				arr[srci][srcj] = 2;
+				//승리판단.
+				isWin(user,whitearr);
+			}
+			this.state = 1;			
+			
+			//턴바꾸기
+			user==1 ? user = 2 : user =1;
+		}else{
+			$(".gametxt").html('이미 둔 곳 입니다.');
+		}		
+	});
+	
+	var originBG;
+	$("td").hover(function(){
+		//origin background
+		originBG = $(this).css('background');
+
+		if(!this.state){
+			if(user==1)
+				$(this).css({'background':'url(./img/black.png) no-repeat center','opacity':'0.2'});
+			else
+				$(this).css({'background':'url(./img/white.png) no-repeat center','opacity':'0.2'});
+		}
+	},function(){
+		if(!this.state)
+			$(this).css({'background':originBG,'opacity':'1'});
+	});
+
+	function resetBG(obj){
+		$(obj).css({'background':originBG,'opacity':'1'});
+	}
+	
+	function swapStone(user,direction,startpos,endpos){
+		var myimgsrc = user==1? 'black' : 'white';	
+		var othersrc = user==1? 'white' : 'black';	
+		
+		switch(direction){
+			case "오른쪽": //행고정 startpos[0]
+				for(var i =startpos[1];i<=endpos[1];i++){ //열증가
+					var origin = $("td[data-list='"+startpos[0]+i+"']>img").attr("src");
+					$("td[data-list='"+startpos[0]+i+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[startpos[0]][i] = user;
+				}
+				break;
+			case "왼쪽": //행고정.startpos[0]
+				for(var i =startpos[1];i>=endpos[1];i--){ //열감소
+					var origin = $("td[data-list='"+startpos[0]+i+"']>img").attr("src");
+					$("td[data-list='"+startpos[0]+i+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[startpos[0]][i] = user;
+				}
+				break;
+			case "위쪽": //열고정. startpos[1]
+				for(var i =startpos[0];i>=endpos[0];i--){ //행감소
+					var origin = $("td[data-list='"+i+startpos[1]+"']>img").attr("src");
+					$("td[data-list='"+i+startpos[1]+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[i][startpos[1]] = user;
+				}
+				break;
+			case "아래쪽"://열고정. startpos[1]
+				for(var i =startpos[0];i<=endpos[0];i++){ //행증가
+					var origin = $("td[data-list='"+i+startpos[1]+"']>img").attr("src");
+					$("td[data-list='"+i+startpos[1]+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[i][startpos[1]] = user;
+				}
+				break;
+			case "45도":
+				for(var i =startpos[0],j=startpos[1];i>=endpos[0]&&j<=endpos[1];i--,j++){ //행감소, 열증가
+					var origin = $("td[data-list='"+i+j+"']>img").attr("src");
+					$("td[data-list='"+i+j+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[i][j] = user;
+				}
+				break;
+			case "-45도":
+				for(var i =startpos[0],j=startpos[1];i<=endpos[0]&&j>=endpos[1];i++,j--){ //행증가, 열감소
+					var origin = $("td[data-list='"+i+j+"']>img").attr("src");
+					$("td[data-list='"+i+j+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[i][j] = user;
+				}
+				break;
+			case "135도":
+				for(var i =startpos[0],j=startpos[1];i>=endpos[0]&&j>=endpos[1];i--,j--){ //행감소, 열감소
+					var origin = $("td[data-list='"+i+j+"']>img").attr("src");
+					$("td[data-list='"+i+j+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[i][j] = user;
+				}
+				break;
+			case "-135도":
+				for(var i =startpos[0],j=startpos[1];i<=endpos[0]&&j<=endpos[1];i++,j++){ //행증가, 열증가
+					var origin = $("td[data-list='"+i+j+"']>img").attr("src");
+					$("td[data-list='"+i+j+"']>img").attr("src",origin.replace(othersrc,myimgsrc));
+					arr[i][j] = user;
+				}
+				break;			
+		}
+	}
+	
+
+	function isPossible(user,obj){
+		//내가 둔 돌.
+		var srci = Number($(obj).attr('data-list').substring(0,1));//행 번호
+		var srcj = Number($(obj).attr('data-list').substring(1,2));//열 번호
+		var myStone = user;
+		var otherStone = user==1? 2 : 1;
+		var startpos = [];
+		var endpos = [];
+		
+		var check1 = false;//옆에 상대방돌이 있는가?
+		var check2 = false;//상대방 돌 옆에 내 돌이 있는가?
+		var checkfinal = false;
+		//-> 오른쪽
+		if(srcj<8){
+			if(arr[srci][srcj+1]==otherStone){//오른쪽에 상대방돌.
+				startpos[0] = srci;
+				startpos[1] = srcj+1;
+				endpos[0] = srci;
+				check1 =true;					
+				for(var j=srcj+2;j<10;j++){
+					if(arr[srci][j] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[srci][j] == myStone){//찾은 상대방돌 오른쪽에 내 돌.
+						endpos[1] = j-1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"오른쪽",startpos,endpos);
+					checkfinal = true;
+				}
+			}
+		}
+
+		check1 = false;
+		check2 = false;
+		//<-왼쪽
+		if(srcj>1){//두칸 남겨두고.
+			if(arr[srci][srcj-1]==otherStone){//왼쪽에 상대방 돌.
+				startpos[0] = srci;
+				startpos[1] = srcj-1;
+				endpos[0] = srci;
+
+				check1 = true;
+				
+				for(var j=srcj-2;j>=0;j--){
+					if(arr[srci][j] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[srci][j] == myStone){//찾은 상대방 돌 왼쪽에 내 돌.
+						endpos[1] = j+1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"왼쪽",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+
+		//↑ 위쪽.
+		check1 = false;
+		check2 = false;
+		if(srci>1){//두칸 남겨두고.
+			if(arr[srci-1][srcj]==otherStone){//위쪽에 상대방 돌.
+				startpos[0] = srci-1;
+				startpos[1] = srcj;
+				endpos[1] = srcj;
+
+				check1 = true;
+				
+				for(var i=srci-2;i>=0;i--){
+					if(arr[i][srcj] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[i][srcj] == myStone){//찾은 상대방 돌 위쪽에 내 돌
+						endpos[0] = i+1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"위쪽",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+
+		//↓ 아래쪽. 
+		check1 = false;
+		check2 = false;
+		if(srci<8){//두칸 남겨두고.
+			if(arr[srci+1][srcj]==otherStone){//아래쪽에 상대방 돌.
+				startpos[0] = srci+1;
+				startpos[1] = srcj;
+				endpos[1] = srcj; //열고정.
+				check1 = true;
+				
+				for(var i=srci+2;i<10;i++){
+					if(arr[i][srcj] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[i][srcj] == myStone){//찾은 상대방돌 아래쪽에 내 돌.
+						endpos[0] = i-1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"아래쪽",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+
+		//45도.
+		check1 = false;
+		check2 = false;
+		if(srci>1 && srcj<8){//두칸 남겨두고.1사분면.
+			if(arr[srci-1][srcj+1]==otherStone){//오른쪽 위에 상대방 돌.
+				startpos[0] = srci-1;
+				startpos[1] = srcj+1;
+				
+
+				check1 = true;
+				
+				for(var i=srci-2,j=srcj+2;i>=0 && j<10;i--,j++){
+					if(arr[i][j] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[i][j] == myStone){//찾은 상대방돌 45 위에 내 돌.
+						endpos[0] = i+1;
+						endpos[1] = j-1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"45도",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+
+		//-45도.
+		check1 = false;
+		check2 = false;
+		if(srci<8 && srcj>1){//두칸 남겨두고.3사분면.
+			if(arr[srci+1][srcj-1]== otherStone){//왼쪽 아래에 상대방 돌.
+				startpos[0] = srci+1;
+				startpos[1] = srcj-1;
+
+				check1 = true;
+				
+				for(var i=srci+2,j=srcj-2;i<10 && j>=0;i++,j--){
+					if(arr[i][j] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[i][j] == myStone){//찾은 상대방돌 -45도에 내 돌.
+						endpos[0] = i-1;
+						endpos[1] = j+1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"-45도",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+
+		//135도.
+		check1 = false;
+		check2 = false;
+		if(srci>1 && srcj>1){//두칸 남겨두고.2사분면.
+			if(arr[srci-1][srcj-1]== otherStone){//왼쪽 위에 상대방 돌.
+				startpos[0] = srci-1;
+				startpos[1] = srcj-1;
+				check1 = true;
+				
+				for(var i=srci-2,j=srcj-2;i>=0 && j>=0;i--,j--){
+					if(arr[i][j] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[i][j] == myStone){//찾은 상대방 돌 135도에 내 돌.
+						endpos[0] = i+1;
+						endpos[1] = j+1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"135도",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+
+		//-135도.
+		check1 = false;
+		check2 = false;
+		if(srci<8 && srcj<8){//두칸 남겨두고.3사분면.
+			if(arr[srci+1][srcj+1]== otherStone){//오른쪽 아래에 상대방 돌.
+				startpos[0] = srci+1;
+				startpos[1] = srcj+1;
+				check1 = true;
+				
+				for(var i=srci+2,j=srcj+2;i<10 && j<10;i++,j++){
+					if(arr[i][j] == 0){//비어 있는 곳이 있다면 더이상 찾을 필요 없음.
+						break;
+					}else if(arr[i][j] == myStone){//찾은 상대방 돌 -135도에 내 돌.
+						endpos[0] = i-1;
+						endpos[1] = j-1;
+						check2 = true;
+						break;
+					}
+				}
+				if(check1 && check2){//둘 수 있는 곳.
+					swapStone(user,"-135도",startpos,endpos);
+					checkfinal = true;
+				}
+			}		
+		}
+		return checkfinal;
+	}
+
+	function isWin(user,arr){
+		
+	}
+
+	function winPlayer(user){
+		if(user == 1){
+			$(".gametxt").html('black 플레이어가 승리했습니다.');			
+		}else{
+			$(".gametxt").html('black 플레이어가 승리했습니다.');
+		}
+		$(".gametxt").append("<input type='button' value='다시하기' id='replay'>");
+	}
+	$(document).on("click","#replay",function(){ 
+		location.reload();
+	});
+});
+</script>
+ </head>
+ <body>
+  <table id="board" cellpadding="0" cellspacing="0">
+	<caption>오델로 게임</caption>	
+  </table>
+  <div class="gametxt"></div>
+ </body>
+</html>

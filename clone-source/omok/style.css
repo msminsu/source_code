@@ -1,0 +1,52 @@
+*{
+	padding:0;
+	margin:0;
+}
+#board{
+	margin:20px auto 0;
+	border-collapse:collapse;
+	text-align:center;
+	width:410px;
+	border-spacing: 0;
+}
+
+#board td{
+	background:url('./img/default.jpg') no-repeat;
+	width:41px;
+	height:41px;
+}
+#board td img{
+	text-align:center;
+	vertical-align:middle;
+}
+#board .topline .top{
+	background:url('./img/top.jpg') no-repeat;
+}
+#board .bottomline .bottom{
+	background:url('./img/bottom.jpg') no-repeat;
+}
+
+#board .lefttop{
+	background:url('./img/lefttop.jpg') no-repeat;
+}
+#board .righttop{
+	background:url('./img/righttop.jpg') no-repeat;
+}
+
+#board .leftbottom{
+	background:url('./img/leftbottom.jpg') no-repeat;
+}
+#board .rightbottom{
+	background:url('./img/rightbottom.jpg') no-repeat;
+}
+#board .left{
+	background:url('./img/left.jpg') no-repeat;
+}
+#board .right{
+	background:url('./img/right.jpg') no-repeat;
+}
+
+.gametxt{
+	width:410px;
+	margin:0 auto;
+}

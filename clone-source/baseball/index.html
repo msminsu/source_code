@@ -1,0 +1,174 @@
+<html lang="ko"><head>
+    <meta charset="utf-8">
+    <title>숫자야구게임</title>
+    <link rel="stylesheet" href="./style.css">
+      <script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+    <script>
+    //random 한 숫자 생성 3개.
+    var random = new Array(3);//컴퓨터가 생성할 랜덤값3개
+    var trycount = 0;//시도횟수
+    var strike = 0; //스트라이크 갯수
+    var ball = 0; //볼 갯수
+    var hint = 1;//힌트사용.
+    
+    function getRandom() {
+        var random_num = Math.floor(Math.random() * 10);
+        //document.write(random_num);
+        if (random_num == 0)
+            random_num++;
+    
+        return random_num;
+    }
+    
+    function InitRandom2(){//배열사용하기.
+        var initnum = [];
+        for(var i=1;i<=9;i++){
+            initnum.push(i);
+        }
+        for(var i=0;i<3;i++){
+            var random_num = Math.floor(Math.random() * initnum.length);
+            random[i]= initnum[random_num];	
+            initnum.splice(random_num,1);//요소 제거하기.
+        }
+    
+    }
+    
+    function InitRandom() {
+        for (var i = 0; i < 3; i++) {
+            var random_num = getRandom(); //1~9 : 3
+            var check = false;
+            while (check == false) {
+                for (var j in random) {
+                    //console.log("랜덤변수 생성:"+random[j]);
+                    if (random_num == random[j]) {
+                        random_num = getRandom();
+                        check = true;
+                    }
+                } //end for
+    
+                if (!check) { //true
+                    random[i] = random_num;
+                    break;
+                } else {
+                    check = false;
+                }
+            } //end while
+        } //end for
+    }
+    
+    window.onload = function() {
+    
+        InitRandom();//InitRandom2
+        console.log(random);
+        var btn1 = document.getElementById("btn1").addEventListener('click',function(){
+        
+            var usernum = document.getElementById('userNum').value; //12
+            
+            if (!usernum) { //"sdf",''=>true
+                alert('숫자를 입력해주세요');
+                userNum.focus();
+                return;
+            }
+    
+            //숫자 타입 체크
+            if (isNaN(usernum)) {
+                alert('숫자타입으로 입력해주세요');
+                userNum.focus();
+                return;
+            }
+    
+            //3자리 이상이면
+            if (usernum.length != 3) { //1, as, 한글 
+                alert('3자리 숫자로 입력해주세요');
+                userNum.focus();
+                return;
+            }
+            
+            //패턴체크
+            if(usernum.indexOf('0')>=0){
+                alert('1부터 9까지의 숫자를 입력해주세요');
+                return;
+            }
+            var array = usernum.split("");
+            var result = {};
+            array.sort();
+    
+            for(var value in array) {
+                var index = array[value];
+                result[index] = result[index] == undefined ? 1 : result[index] += 1;
+    
+                if (result[index]>1) { 
+                    alert('중복된 숫자를 입력할 수 없습니다.');
+                    userNum.focus();
+                    return;
+                }	
+            }        
+            MatchingNum(usernum);
+        });
+    }
+    
+    function MatchingNum(usernum) {
+        strike = 0;
+        ball = 0;
+    
+        //strike 판단.
+        for (var j in random) {
+            console.log(random[j] + ", " + usernum.substr(j, 1) + ", j=" + j);
+    
+            if (random[j] == usernum.substr(j, 1)) {
+                strike++;
+            }
+    
+            //ball판단
+            for (var i = 0; i < 3; i++) {
+                if (j != i && random[j] == usernum.substring(i, i + 1))
+                    ball++;
+            }
+        }
+    
+        strike += "S ";
+        ball += "B";
+    
+        var span = document.createElement("span");
+        var text = document.createTextNode(++trycount + "번째 도전 : " + strike + ball + ", 유저입력값 : " + usernum);
+        span.appendChild(text);
+        var br = document.createElement("br");
+    
+        var right = document.getElementById("right");
+        right.appendChild(span);
+        right.appendChild(br);
+    
+        if (strike == "3S ") {
+            var wrap = document.getElementById("wrap");
+            wrap.append("축하합니다. 정답입니다. 정답 : " + random);
+            $("#card span").eq(0).html(usernum[0]);
+            $("#card span").eq(1).html(usernum[1]);
+            $("#card span").eq(2).html(usernum[2]);
+        }
+    }
+    //전역변수 설명.
+    //컴퓨터가 랜덤 숫자
+    //카드3장으로 UI 구성.
+    //힌트보기.
+    //15번까지만 기회. 
+    </script>
+    </head>
+    
+    <body>
+    <center>
+    <h3> 숫자야구 </h3>
+    <div id="wrap">
+        <div id="card">
+            <span>X</span>
+            <span>X</span>
+            <span>X</span>
+        </div>
+        <div id="left">
+                <input type="text" id="userNum" name="userNum"><input type="button" value="입력" name="btn1" id="btn1">
+        </div>
+        <div id="right">
+        </div>
+    </div>
+    </center>
+    
+     </body></html>

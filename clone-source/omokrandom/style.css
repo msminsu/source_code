@@ -1,0 +1,63 @@
+*{
+	padding:0;
+	margin:0;
+}
+.aligncenter h3{
+	margin-top:5px;
+	text-align:center;
+}
+#target{
+	margin:0 auto;
+	border-collapse:collapse;
+	text-align:center;
+	border-spacing: 0;
+}
+
+#board{
+	margin:5px auto 0;
+	border-collapse:collapse;
+	text-align:center;
+	width:410px;
+	border-spacing: 0;
+}
+
+#board td,#target td{
+	background:url('./img/default.jpg') no-repeat;
+	width:41px;
+	height:41px;
+}
+#board td img,#target td img{
+	text-align:center;
+	vertical-align:middle;
+}
+#board .topline .top, #target .topline .top{
+	background:url('./img/top.jpg') no-repeat;
+}
+#board .bottomline .bottom,#target .bottomline .bottom{
+	background:url('./img/bottom.jpg') no-repeat;
+}
+
+#board .lefttop,#target .lefttop{
+	background:url('./img/lefttop.jpg') no-repeat;
+}
+#board .righttop,#target .righttop{
+	background:url('./img/righttop.jpg') no-repeat;
+}
+
+#board .leftbottom,#target .leftbottom{
+	background:url('./img/leftbottom.jpg') no-repeat;
+}
+#board .rightbottom, #target .rightbottom{
+	background:url('./img/rightbottom.jpg') no-repeat;
+}
+#board .left, #target .left{
+	background:url('./img/left.jpg') no-repeat;
+}
+#board .right, #target .right{
+	background:url('./img/right.jpg') no-repeat;
+}
+
+.gametxt{
+	width:410px;
+	margin:0 auto;
+}

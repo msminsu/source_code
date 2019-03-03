@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <title>오목</title>
+  <script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+
+<script>
+//함수기반 오목.
+$(function(){
+
+	var maxsize = 9;
+	var user = 1;//1:black, 2:white
+	var blackarr = [];
+	var whitearr = [];
+	
+	var targetmax = 3;
+	
+	//정답 임의 생성.
+	var randomcorrect = [];
+	for(var i = 0;i<9;i++){
+		randomcorrect.push(i);
+	}
+	var correct = [];
+	for(var i =0;i<4;i++){
+		var rannum = Math.floor(Math.random() * randomcorrect.length);
+		correct.push(randomcorrect[rannum]);
+		randomcorrect.splice(rannum,1);
+	}
+	console.log(correct);
+	var correctstr0 = [];
+	for(var i =0;i<correct.length;i++){
+		var mok = Math.floor(correct[i] / 3);
+		var rest = correct[i] % 3;
+		correctstr0.push(mok+""+rest);
+	}
+	
+	
+
+	//정답판 생성.
+	for(var i =0;i<4;i++){
+		$("#target").append("<tr></tr>");
+		if(i==0){
+			$("#target tr").eq(i).addClass("topline");
+		}else if(i==targetmax){
+			$("#target tr").eq(i).addClass("bottomline");
+		}
+		for(var j=0;j<4;j++){
+			$("#target tr:nth-child("+(i+1)+")").append("<td data-list='"+i+j+"'></td>");
+			if(i==0){
+				if(j==0){
+					$("#target tr:nth-child("+(i+1)+") td:first").addClass("lefttop");
+				}else if(j==targetmax){
+					$("#target tr:nth-child("+(i+1)+") td:last").addClass("righttop");
+				}else{
+					$("#target tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("top");
+				}
+			}else if(i==targetmax){
+				if(j==0){
+					$("#target tr:nth-child("+(i+1)+") td:first").addClass("leftbottom");
+				}else if(j==targetmax){
+					$("#target tr:nth-child("+(i+1)+") td:last").addClass("rightbottom");
+				}else{
+					$("#target tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("bottom");
+				}
+			}else{
+				if(j==0){
+					$("#target tr:nth-child("+(i+1)+") td:first").addClass("left");
+				}else if(j==targetmax){
+					$("#target tr:nth-child("+(i+1)+") td:last").addClass("right");
+				}
+			}
+
+			//정답 알 세팅.
+			for(var k =0;k<correctstr0.length;k++){
+				if(correctstr0[k] == i+""+j){
+					$("#target tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").append("<img src='img/black.png'>");
+				}
+			}
+		}
+	}
+	//3가지 타입의 정답 추가생성.(0~8 : 00,01,02,10,11,12,20,21,22)
+	//회전 : 00->02, 01->12, 02->22 / 10->01,11->11,12->21 /  20->00,21->10,22->20
+	var correctstr90 = [];
+	var correctstr180 = [];
+	var correctstr270 = [];
+	rotation(correctstr0,correctstr90);
+	rotation(correctstr90,correctstr180);
+	rotation(correctstr180,correctstr270);
+	correctstr0.sort();
+	correctstr90.sort();
+	correctstr180.sort();
+	correctstr270.sort();
+
+	console.log(correctstr0);
+	console.log(correctstr90);
+	console.log(correctstr180);
+	console.log(correctstr270);
+
+	function rotation(arrsrc,arrtarget){
+		for(var i =0;i<arrsrc.length;i++){
+			switch(arrsrc[i]){
+				case "00":
+					arrtarget.push("02");
+					break;
+				case "01":
+					arrtarget.push("12");
+					break;
+				case "02":
+					arrtarget.push("22");
+					break;
+				case "10":
+					arrtarget.push("01");
+					break;
+				case "11":
+					arrtarget.push("11");
+					break;
+				case "12":
+					arrtarget.push("21");
+					break;
+				case "20":
+					arrtarget.push("00");
+					break;
+				case "21":
+					arrtarget.push("10");
+					break;
+				case "22":
+					arrtarget.push("20");
+					break;
+			}
+		}
+	}
+	//오목판 세팅.
+	for(var i =0;i<10;i++){
+		$("#board").append("<tr></tr>");
+		if(i==0){
+			$("#board tr").eq(i).addClass("topline");
+		}else if(i==maxsize){
+			$("#board tr").eq(i).addClass("bottomline");
+		}
+		
+		for(var j=0;j<10;j++){
+			$("#board tr:nth-child("+(i+1)+")").append("<td data-list='"+i+j+"'></td>");
+			if(i==0){
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("lefttop");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("righttop");
+				}else{
+					$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("top");
+				}
+			}else if(i==maxsize){
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("leftbottom");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("rightbottom");
+				}else{
+					$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("bottom");
+				}
+			}else{
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("left");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("right");
+				}
+			}
+		}
+	}
+	
+
+	$("#board td").click(function(){
+		resetBG(this);
+		$(".gametxt").html('');
+		if(!this.state){
+			if(user==1){
+				$(this).append("<img src='img/black.png'>");
+				blackarr.push($(this).attr('data-list'));				
+				//승리판단
+				isWinCheck(user,blackarr);
+			}else{
+				$(this).append("<img src='img/white.png'>");
+				whitearr.push($(this).attr('data-list'));
+				//승리판단.
+				isWinCheck(user,whitearr);
+			}
+			this.state = 1;			
+			
+			
+			//턴바꾸기
+			user==1 ? user = 2 : user =1;
+		}else{
+			$(".gametxt").html('이미 둔 곳 입니다.');
+		}		
+	});
+	
+	var originBG;
+	$("#board td").hover(function(){
+		//origin background
+		originBG = $(this).css('background-image');
+
+		if(!this.state){
+			if(user==1)
+				$(this).css({'background-image':'url(./img/black.png)','opacity':'0.2'});
+			else
+				$(this).css({'background-image':'url(./img/white.png)','opacity':'0.2'});
+		}
+	},function(){
+		if(!this.state)
+			$(this).css({'background-image':originBG,'opacity':'1'});
+	});
+
+	function resetBG(obj){
+		$(obj).css({'background-image':originBG,'opacity':'1'});
+	}
+
+	
+
+	function isWinCheck(user,arr){
+		arr.sort();
+		if(arr.length >=4){
+			var checkcount=0; //정답체크변수
+			for(var item of arr){
+				//0도판단.correctstr0
+				//기준점 맞추기.
+				var point = item;
+				var pointy = point.substring(0,1);
+				var pointx = point.substring(1,2);
+				var offsety = pointy-correctstr0[0].substring(0,1);
+				var offsetx = pointx-correctstr0[0].substring(1,2);
+				var changesrc = [];
+				for(var i = 0;i<correctstr0.length;i++){
+					var y = Number(correctstr0[i].substring(0,1)) + Number(offsety);
+					var x = Number(correctstr0[i].substring(1,2)) + Number(offsetx);
+					changesrc.push(y+""+x);
+				}
+
+				//사용자돌.
+				var srci = item.substring(0,1);//행번호.
+				var srcj = item.substring(1,2);//열번호.
+				var setWinner = false;
+				//checkcount = 0;
+				
+				checkcount=0;
+				for(var item2 of arr){
+					//정답돌과 사용자돌 비교.
+					for(var correct of changesrc){
+						if(item2 == correct)
+							checkcount++;
+					}
+					if(checkcount ==4){
+						winPlayer(user);
+						console.log('0도승리');
+						console.log(arr);
+						console.log(changesrc);
+						setWinner =true;
+						return item2;//더이상 순환할 필요 없음.
+					}
+				}
+				
+				if(setWinner)
+					return item;//찾아진 item을 리턴 = true
+			}
+			//console.log(arr);
+			//console.log(changesrc);
+
+			//90도판단.
+			for(var item of arr){
+				//기준점 맞추기.
+				var point = item;
+				var pointy = point.substring(0,1);
+				var pointx = point.substring(1,2);
+				var offsety = pointy- correctstr90[0].substring(0,1);
+				var offsetx = pointx- correctstr90[0].substring(1,2);
+				var changesrc = [];
+				for(var i = 0;i<correctstr90.length;i++){
+					var y = Number(correctstr90[i].substring(0,1)) + Number(offsety);
+					var x = Number(correctstr90[i].substring(1,2)) + Number(offsetx);
+					changesrc.push(y+""+x);
+				}
+
+				var setWinner = false;
+				//checkcount = 0;
+				
+				checkcount=0;
+				for(var item2 of arr){
+					//정답돌과 사용자돌 비교.
+					for(var correct of changesrc){
+						if(item2 == correct)
+							checkcount++;
+					}
+					if(checkcount ==4){
+						winPlayer(user);
+						console.log('90도승리');
+						console.log(arr);
+						console.log(changesrc);
+						setWinner =true;
+						return item2;//더이상 순환할 필요 없음.
+					}
+				}
+				
+				if(setWinner)
+					return item;//찾아진 item을 리턴 = true
+			}
+
+			//180도판단.
+			for(var item of arr){
+				//기준점 맞추기.
+				var point = item;
+				var pointy = point.substring(0,1);
+				var pointx = point.substring(1,2);
+				var offsety = pointy- correctstr180[0].substring(0,1);
+				var offsetx = pointx- correctstr180[0].substring(1,2);
+				var changesrc = [];
+				for(var i = 0;i<correctstr180.length;i++){
+					var y = Number(correctstr180[i].substring(0,1)) + Number(offsety);
+					var x = Number(correctstr180[i].substring(1,2)) + Number(offsetx);
+					changesrc.push(y+""+x);
+				}
+
+				var setWinner = false;
+				//checkcount = 0;
+				
+				checkcount=0;
+				for(var item2 of arr){
+					//정답돌과 사용자돌 비교.
+					for(var correct of changesrc){
+						if(item2 == correct)
+							checkcount++;
+					}
+					if(checkcount ==4){
+						winPlayer(user);
+						console.log('180도승리');
+						console.log(arr);
+						console.log(changesrc);
+						setWinner =true;
+						return item2;//더이상 순환할 필요 없음.
+					}
+				}
+				
+				if(setWinner)
+					return item;//찾아진 item을 리턴 = true
+			}
+
+			//270도판단.
+			for(var item of arr){
+				//기준점 맞추기.
+				var point = item;
+				var pointy = point.substring(0,1);
+				var pointx = point.substring(1,2);
+				var offsety = pointy- correctstr270[0].substring(0,1);
+				var offsetx = pointx- correctstr270[0].substring(1,2);
+				var changesrc = [];
+				for(var i = 0;i<correctstr180.length;i++){
+					var y = Number(correctstr270[i].substring(0,1)) + Number(offsety);
+					var x = Number(correctstr270[i].substring(1,2)) + Number(offsetx);
+					changesrc.push(y+""+x);
+				}
+
+				var setWinner = false;
+				//checkcount = 0;
+				
+				checkcount=0;
+				for(var item2 of arr){
+					//정답돌과 사용자돌 비교.
+					for(var correct of changesrc){
+						if(item2 == correct)
+							checkcount++;
+					}
+					if(checkcount ==4){
+						winPlayer(user);
+						console.log('270도승리');
+						console.log(arr);
+						console.log(changesrc);
+						setWinner =true;
+						return item2;//더이상 순환할 필요 없음.
+					}
+				}
+				
+				if(setWinner)
+					return item;//찾아진 item을 리턴 = true
+			}
+		}
+	}
+	
+	function winPlayer(user){
+		if(user == 1){
+			$(".gametxt").html('black 플레이어가 승리했습니다.');			
+		}else{
+			$(".gametxt").html('white 플레이어가 승리했습니다.');
+		}
+		$(".gametxt").append("<input type='button' value='다시하기' id='replay'>");
+	}
+	$(document).on("click","#replay",function(){ 
+		location.reload();
+	});
+});
+</script>
+ </head>
+ <body>
+  <table id="target" cellpadding="0" cellspacing="0">	
+  </table>
+  <table id="board" cellpadding="0" cellspacing="0">	
+  </table>
+  <div class="gametxt"></div>
+ </body>
+</html>

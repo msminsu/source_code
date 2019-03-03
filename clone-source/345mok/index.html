@@ -1,724 +1,573 @@
-<!DOCTYPE html>
-<html lang="ko"><head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="style.css">
-        <title>4color4목</title>
-        <script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
-      <script>
-      //함수기반 6목.
-      $(function(){
-          var maxsize = 14;
-          var user = 1;//1:black, 2:white
-          var blackarr = [];//
-          var whitearr = [];
-          $("#board").width((maxsize+1)*41);
-          $(".Black3Count").html("0");
-          $(".White3Count").html("0");
-          $(".Black4Count").html("0");
-          $(".White4Count").html("0");
-          $(".Black5Count").html("0");
-          $(".White5Count").html("0");
-      
-      
-          //오목판 세팅.
-          for(var i =0;i<maxsize+1;i++){
-              $("#board").append("<tr></tr>");//<table id='board'><tr class='topline'></tr></table>
-              if(i==0){
-                  $("#board tr").addClass("topline");
-              }else if(i==maxsize){
-                  $("#board tr").eq(i).addClass("bottomline");//i = 0, 1, 2
-              }
-              
-              for(var j=0;j<maxsize+1;j++){
-                  var row = "";
-                  var col = "";
-                  if(i<10){
-                      row = "0"+i;
-                  }else{
-                      row = i;	
-                  }
-                  if(j<10){
-                      col = "0"+j;
-                  }else{
-                      col = j;
-                  }
-                  $("#board tr:nth-child("+(i+1)+")").append("<td data-list='"+row+col+"'></td>");//<table id='board'><tr class='topline'><td data-list=0000 class='lefttop'></td><td class='top'></td></tr></table>
-                  if(i==0){//맨 윗줄
-                      if(j==0){
-                          $("#board tr:nth-child("+(i+1)+") td:first").addClass("lefttop");
-                      }else if(j==maxsize){
-                          $("#board tr:nth-child("+(i+1)+") td:last").addClass("righttop");
-                      }else{
-                          $("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("top");
-                      }
-                  }else if(i==maxsize){//맨 마지막줄
-                      if(j==0){
-                          $("#board tr:nth-child("+(i+1)+") td:first").addClass("leftbottom");
-                      }else if(j==maxsize){
-                          $("#board tr:nth-child("+(i+1)+") td:last").addClass("rightbottom");
-                      }else{
-                          $("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("bottom");
-                      }
-                  }else{//중간 줄.
-                      if(j==0){
-                          $("#board tr:nth-child("+(i+1)+") td:first").addClass("left");
-                      }else if(j==maxsize){
-                          $("#board tr:nth-child("+(i+1)+") td:last").addClass("right");
-                      }
-                  }
-              }
-          }
-          
-          var black3count = 0;
-          var white3count = 0;
-          var black4count = 0;
-          var white4count = 0;
-          
-          var originBG;
-          
-          //
-          class doll{
-              constructor(y,x){
-                  this.row = y;
-                  this.col = x;
-                  this.iscount = false;
-                  this.index =0;
-              }
-          }
-      
-          $("#board td").click(function(){
-              resetBG(this);//this는 전체 td중에 클릭된 td
-              $(".gametxt").html('');	
-              if(!this.state){//아직 클릭되지 않은 td 였다면,
-                  if(user==1){//black
-                      
-                      $(this).append("<img src='img/black.png'>");
-                      var y = $(this).attr('data-list').substring(0,2);//0012.substring(0,끝인덱스번호)
-                      var x = $(this).attr('data-list').substring(2,4);//0012
-                      blackarr.push(new doll(y,x));//push, pop, shift, unshift, splice, slice	
-                      //승리판단
-                      isWin(user,blackarr);
-                      
-                  }else{
-                      $(this).append("<img src='img/white.png'>");
-                      var y = $(this).attr('data-list').substring(0,2);
-                      var x = $(this).attr('data-list').substring(2,4);
-                      whitearr.push(new doll(y,x));	
-                      //승리판단
-                      isWin(user,whitearr);
-                  }
-                  this.state = 1;			
-                  
-                  user==1 ? user = 2 : user =1;
-                  dollcount = 0;
-                  
-              }else{
-                  $(".gametxt").html('이미 둔 곳 입니다.');
-              }		
-          });
-          
-          $("#board td").hover(function(){
-              //origin background
-              originBG = $(this).css('background-image');//현재 적용된 background-image 값을 가져온다.
-              console.dir(this);
-              if(!this.state){//this.state값이 없다면
-                  if(user==1){
-                      $(this).css({'background-image':'url(./img/black.png)','opacity':'0.2'});
-                  }
-                  else{
-                      $(this).css({'background-image':'url(./img/white.png)','opacity':'0.2'});
-                  }
-              }
-          },function(){
-              if(!this.state)
-                  $(this).css({'background-image':originBG,'opacity':'1'});
-          });
-      
-          function resetBG(obj){
-              $(obj).css({'background-image':originBG,'opacity':'1'});//현재 적용된 background-image
-          }
-      
-          //array [], {}
-          var winRule = {
-              count3 : 15,
-              count4 : 8,
-              count5 : 3
-          }
-      
-          function wincount(user,arr,maxcount){
-              
-              if(maxcount ==4){
-                  let count = 0;
-                  for(let item of arr){
-                      item.iscount = false;
-                      item.index = count;
-                      count++;
-                  }
-                  if(user==1){
-                      $(".Black3Count").html("0");
-                  }else{
-                      $(".White3Count").html("0");
-                  }
-              }
-              
-              var wincheckcount = 0;
-      
-              if(arr.length >=maxcount){
-                  
-                  var linecount=0; //동일 행판단.
-                  //0도 판단.
-                  arr.some(function(item){
-                      //기준점.
-                      var srci = item.row;//행번호.
-                      var srcj = item.col;//열번호.
-                      var setWinner = false;
-                      linecount = 0;
-                      arr.some(function(item2){
-                          //기준점과 다음돌 비교.
-      
-                          var targeti = item2.row;
-                          var targetj = item2.col;
-                          let lastindex = 0;
-                          if(srci == targeti && srcj == targetj){
-                              //첫번째 동일 돌 카운트1.
-                              linecount = 1;
-                          }else{
-                              if(maxcount ==3){
-                                  //if(item2.iscount == false){
-                                      if(srci == targeti && Math.abs(targetj - srcj) < maxcount){							
-                                          linecount++;
-                                          
-                                      }
-                                  //}
-                                  //console.log(item2);
-                              }else{//4,5
-                                  if(srci == targeti && Math.abs(targetj - srcj) < maxcount){							
-                                      linecount++;
-                                      lastindex =  item2.index;
-                                  }
-                              }
-                          }
-                          if(linecount == maxcount){
-                              linecount =0;
-                              wincheckcount++;
-                              if(maxcount ==4){
-                                  //console.log(lastindex);
-                                  //console.log(arr);
-                                  arr[lastindex].iscount = true;
-                                  arr[lastindex-1].iscount = true;
-                                  arr[lastindex-2].iscount = true;
-                                  arr[lastindex-3].iscount = true;
-                                  if(user==1){
-                                      $(".Black4Count").html(wincheckcount);
-                                  }else{
-                                      $(".White4Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==3){
-                                  if(user==1){
-                                      $(".Black3Count").html(wincheckcount);
-                                  }else{
-                                      $(".White3Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==5){
-                                  if(user==1){
-                                      $(".Black5Count").html(wincheckcount);
-                                  }else{
-                                      $(".White5Count").html(wincheckcount);
-                                  }
-                              }
-                          }
-                          
-                          if(maxcount==5 && wincheckcount >= winRule.count5){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==4 && wincheckcount >= winRule.count4){
-                              //console.log(arr);
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==3 && wincheckcount >= winRule.count3){
-                              //console.log(arr);
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                      });
-                      if(setWinner)
-                          return item;
-                  });
-      
-                  //90도 판단.
-                  var linecount=0; //동일 열판단.
-                  arr.some(function(item){
-                      //기준점.
-                      var srci = item.row;//행번호.
-                      var srcj = item.col;//열번호.
-                      var setWinner = false;
-                      linecount = 0;
-                      arr.some(function(item2){
-                          //기준점과 다음돌 비교.
-                          var targeti = item2.row;
-                          var targetj = item2.col;
-                          let lastindex = 0;
-                          
-                          if(srci == targeti && srcj == targetj){
-                              //첫번째 동일 돌 카운트1.
-                              linecount = 1;
-                          }else{
-                              if(maxcount ==3){
-                                  //if(item2.iscount == false){
-                                      if(Math.abs(srci-targeti)< maxcount && srcj==targetj ){						
-                                          linecount++;
-                                      }
-                                  //}
-                              }else{//4,5
-                                  if(Math.abs(srci-targeti)< maxcount && srcj==targetj ){						
-                                      linecount++;
-                                      lastindex =  item2.index;
-                                  }
-                              }
-                          }
-      
-                          if(linecount == maxcount){
-                              linecount =0;
-                              wincheckcount++;
-                              if(maxcount ==4){
-                                  arr[lastindex].iscount = true;
-                                  arr[lastindex-1].iscount = true;
-                                  arr[lastindex-2].iscount = true;
-                                  arr[lastindex-3].iscount = true;
-                                  if(user==1){
-                                      $(".Black4Count").html(wincheckcount);
-                                  }else{
-                                      $(".White4Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==3){
-                                  if(user==1){
-                                      $(".Black3Count").html(wincheckcount);
-                                  }else{
-                                      $(".White3Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==5){
-                                  if(user==1){
-                                      $(".Black5Count").html(wincheckcount);
-                                  }else{
-                                      $(".White5Count").html(wincheckcount);
-                                  }
-                              }	
-                          }
-                          if(maxcount==5 && wincheckcount >= winRule.count5){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==4 && wincheckcount >= winRule.count4){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==3 && wincheckcount >= winRule.count3){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                      });
-                      if(setWinner)
-                          return item;
-                  });
-      
-                  //45도 판단.sorting을 했기 때문에 225도방향으로만 고려.
-                  var linecount=0; //45도 판단카운트.
-                  arr.some(function(item){
-                      //기준점.
-                      var srci = item.row;//행번호.
-                      var srcj = item.col;//열번호.
-                      var setWinner = false;
-                      linecount = 0;
-                      let count4except = [];
-                      //for(let k in arr){
-                      //	var item2 = arr[k];
-                      arr.some(function(item2){
-                          //기준점과 다음돌 비교.
-                          var targeti = item2.row;
-                          var targetj = item2.col;
-                          
-                          if(srci == targeti && srcj == targetj){
-                              //첫번째 동일 돌 카운트1.
-                              linecount = 1;
-                              count4except.push(item2);
-                          }else{
-                              var stepi=0; //계단차이값 구하기.
-                              var stepj=0;
-                              if(maxcount ==3){
-                                  //if(item.iscount == false && item2.iscount == false){
-                                      if(srci<targeti && srcj>targetj){
-                                          stepi = Math.abs(srci - targeti);
-                                          stepj = Math.abs(srcj - targetj);	
-                                          if(stepi == stepj && stepi<maxcount){
-                                              //console.log(arr);
-                                              //console.log(item2);
-                                              linecount++;
-                                          }
-                                      }
-                                  //}
-                              }else{//4,5
-                                  
-                                  if(srci<targeti && srcj>targetj){
-                                      stepi = Math.abs(srci - targeti);
-                                      stepj = Math.abs(srcj - targetj);	
-                                      if(stepi == stepj && stepi<maxcount){
-                                          linecount++;
-                                          count4except.push(item2);
-                                      }
-                                  }
-                              }
-                          }
-                          if(linecount == maxcount){
-                              linecount =0;
-                              wincheckcount++;
-                              if(maxcount ==4){
-                                  console.log('except',count4except);
-                                  console.log('all',arr);
-                                  for(let item of count4except){
-                                      item.iscount = true;
-                                  }
-                                  if(user==1){
-                                      $(".Black4Count").html(wincheckcount);
-                                  }else{
-                                      $(".White4Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==3){
-                                  if(user==1){
-                                      $(".Black3Count").html(wincheckcount);
-                                  }else{
-                                      $(".White3Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==5){
-                                  if(user==1){
-                                      $(".Black5Count").html(wincheckcount);
-                                  }else{
-                                      $(".White5Count").html(wincheckcount);
-                                  }
-                              }	
-                          }
-      
-                          
-                          
-                          if(maxcount==5 && wincheckcount >= winRule.count5){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==4 && wincheckcount >= winRule.count4){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==3 && wincheckcount >= winRule.count3){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                      });
-                      if(setWinner)
-                          return item;
-                  });
-      
-                  //135도 판단.sorting을 했기 때문에 -45도만 고려.
-                  var linecount=0; //135도 판단카운트.
-                  arr.some(function(item){
-                      //기준점.
-                      var srci = item.row;//행번호.
-                      var srcj = item.col;//열번호.
-                      var setWinner = false;
-                      linecount = 0;
-                      let count4except = [];
-                      arr.some(function(item2){
-                          //기준점과 다음돌 비교.
-                          var targeti = item2.row;
-                          var targetj = item2.col;
-                          if(srci == targeti && srcj == targetj){
-                              //첫번째 동일 돌 카운트1.
-                              linecount = 1;
-                              count4except.push(item2);
-                          }else{
-                              var stepi=0; //계단차이값 구하기.
-                              var stepj=0;
-                              if(maxcount ==3){
-                                  //if(item.iscount == false && item2.iscount == false){
-                                      if(srci<targeti && srcj<targetj){
-                                          stepi = Math.abs(srci - targeti);
-                                          stepj = Math.abs(srcj - targetj);	
-                                          if(stepi == stepj && stepi<maxcount)
-                                              linecount++;
-                                      }
-                                  //}
-                              }else{//4,5
-                                  if(srci<targeti && srcj<targetj){
-                                      stepi = Math.abs(srci - targeti);
-                                      stepj = Math.abs(srcj - targetj);	
-                                      if(stepi == stepj && stepi<maxcount){
-                                          linecount++;
-                                          count4except.push(item2);
-                                      }
-                                  }
-                              }					
-                          }
-                          if(linecount == maxcount){
-                              linecount =0;
-                              wincheckcount++;
-                              if(maxcount ==4){
-                                  console.log('except',count4except);
-                                  console.log('all',arr);
-                                  for(let item of count4except){
-                                      item.iscount = true;
-                                  }
-                                  if(user==1){
-                                      $(".Black4Count").html(wincheckcount);
-                                  }else{
-                                      $(".White4Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==3){
-                                  if(user==1){
-                                      $(".Black3Count").html(wincheckcount);
-                                  }else{
-                                      $(".White3Count").html(wincheckcount);
-                                  }
-                              }else if(maxcount ==5){
-                                  if(user==1){
-                                      $(".Black5Count").html(wincheckcount);
-                                  }else{
-                                      $(".White5Count").html(wincheckcount);
-                                  }
-                              }
-                          }
-                          if(maxcount==5 && wincheckcount >= winRule.count5){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==4 && wincheckcount >= winRule.count4){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                          if(maxcount==3 && wincheckcount >= winRule.count3){
-                              winPlayer(user);
-                              setWinner =true;
-                              return item2;
-                          }
-                      });
-                      if(setWinner)
-                          return item;
-                  });
-              }	
-          }
-          
-          var windollcount = 5;
-          function isWin(user,arr){
-              arr.sort(function(left,right){
-                  //left : 1011 - 12 = 양수/0 , 음수.
-                  //right : 0012
-                  return (left.row + left.col) - (right.row + right.col);
-              });
-              wincount(user,arr,5);
-              wincount(user,arr,4);
-              wincount(user,arr,3);//쌍삼 막기.
-              //count3(user,arr);
-      
-          }
-          
-          function winPlayer(user){
-              if(user == 1){
-                  $(".gametxt").html('black 플레이어가 승리했습니다.');			
-              }else{
-                  $(".gametxt").html('white 플레이어가 승리했습니다.');
-              }
-              $(".gametxt").append("<input type='button' value='다시하기' id='replay'>");
-          }
-          $(document).on("click","#replay",function(){ 
-              location.reload();
-          });
-      });
-      </script>
-       </head>
-       <body>
-      <div class="aligncenter">
-        <table id="board" cellpadding="0" cellspacing="0" style="width: 615px;">	
-        <tbody><tr class="topline"><td data-list="0000" class="lefttop"></td><td data-list="0001" class="top"></td><td data-list="0002" class="top"></td><td data-list="0003" class="top" style="background-image: url('./img/top.jpg'); opacity: 1;"></td>
-            <td data-list="0004" class="top"></td>
-            <td data-list="0005" class="top" style="background-image: url('./img/top.jpg'); opacity: 1;"></td>
-            <td data-list="0006" class="top"></td>
-            <td data-list="0007" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0008" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0009" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0010" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0011" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0012" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0013" class="top" style="background-image: url(./img/top.jpg); opacity: 1;"></td>
-            <td data-list="0014" class="righttop" style="background-image: url(./img/righttop.jpg); opacity: 1;"></td></tr><tr><td data-list="0100" class="left"></td>
-            <td data-list="0101" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0102" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0103"></td>
-            <td data-list="0104" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0105" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0106"></td>
-            <td data-list="0107"></td>
-            <td data-list="0108"></td>
-            <td data-list="0109" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0110" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0111"></td>
-            <td data-list="0112"></td>
-            <td data-list="0113" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0114" class="right" style="background-image: url(./img/right.jpg); opacity: 1;"></td></tr><tr><td data-list="0200" class="left" style="background-image: url(./img/left.jpg); opacity: 1;"></td>
-            <td data-list="0201"></td>
-            <td data-list="0202" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0203" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0204"></td>
-            <td data-list="0205" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0206"></td>
-            <td data-list="0207" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0208" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0209" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0210" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0211"></td>
-            <td data-list="0212" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0213"></td>
-            <td data-list="0214" class="right"></td></tr><tr><td data-list="0300" class="left" style="background-image: url(./img/left.jpg); opacity: 1;"></td>
-            <td data-list="0301" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0302" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0303" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0304" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0305" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0306"></td>
-            <td data-list="0307" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0308" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0309" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0310" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0311" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0312" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0313" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0314" class="right" style="background-image: url(./img/right.jpg); opacity: 1;"></td></tr><tr><td data-list="0400" class="left"></td>
-            <td data-list="0401"></td>
-            <td data-list="0402"></td>
-            <td data-list="0403"></td>
-            <td data-list="0404"></td>
-            <td data-list="0405" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0406" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0407"></td>
-            <td data-list="0408"></td>
-            <td data-list="0409"></td>
-            <td data-list="0410"></td>
-            <td data-list="0411"></td>
-            <td data-list="0412"></td>
-            <td data-list="0413" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0414" class="right" style="background-image: url(./img/right.jpg); opacity: 1;"></td></tr><tr><td data-list="0500" class="left"></td>
-            <td data-list="0501"></td>
-            <td data-list="0502"></td>
-            <td data-list="0503"></td>
-            <td data-list="0504"></td>
-            <td data-list="0505"></td>
-            <td data-list="0506" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0507" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0508"></td>
-            <td data-list="0509"></td>
-            <td data-list="0510"></td>
-            <td data-list="0511"></td>
-            <td data-list="0512"></td>
-            <td data-list="0513"></td>
-            <td data-list="0514" class="right"></td></tr><tr><td data-list="0600" class="left"></td>
-            <td data-list="0601"></td>
-            <td data-list="0602"></td>
-            <td data-list="0603"></td>
-            <td data-list="0604"></td>
-            <td data-list="0605"></td>
-            <td data-list="0606"></td>
-            <td data-list="0607" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0608" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0609" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0610"></td>
-            <td data-list="0611"></td>
-            <td data-list="0612"></td>
-            <td data-list="0613"></td>
-            <td data-list="0614" class="right"></td></tr><tr><td data-list="0700" class="left"></td>
-            <td data-list="0701"></td>
-            <td data-list="0702"></td>
-            <td data-list="0703"></td>
-            <td data-list="0704"></td>
-            <td data-list="0705"></td>
-            <td data-list="0706"></td>
-            <td data-list="0707"></td>
-            <td data-list="0708" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0709" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0710"></td>
-            <td data-list="0711"></td>
-            <td data-list="0712"></td>
-            <td data-list="0713"></td>
-            <td data-list="0714" class="right"></td></tr><tr><td data-list="0800" class="left"></td>
-            <td data-list="0801"></td>
-            <td data-list="0802"></td>
-            <td data-list="0803"></td>
-            <td data-list="0804"></td>
-            <td data-list="0805"></td>
-            <td data-list="0806"></td>
-            <td data-list="0807"></td>
-            <td data-list="0808"></td>
-            <td data-list="0809" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0810"></td>
-            <td data-list="0811"></td>
-            <td data-list="0812"></td>
-            <td data-list="0813"></td>
-            <td data-list="0814" class="right"></td></tr><tr><td data-list="0900" class="left"></td>
-            <td data-list="0901"></td>
-            <td data-list="0902"></td>
-            <td data-list="0903"></td>
-            <td data-list="0904"></td>
-            <td data-list="0905"></td>
-            <td data-list="0906"></td>
-            <td data-list="0907"></td>
-            <td data-list="0908"></td>
-            <td data-list="0909"></td>
-            <td data-list="0910" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="0911"></td>
-            <td data-list="0912"></td>
-            <td data-list="0913"></td>
-            <td data-list="0914" class="right"></td></tr><tr><td data-list="1000" class="left"></td>
-            <td data-list="1001"></td>
-            <td data-list="1002"></td>
-            <td data-list="1003"></td>
-            <td data-list="1004"></td>
-            <td data-list="1005"></td>
-            <td data-list="1006"></td>
-            <td data-list="1007"></td>
-            <td data-list="1008"></td>
-            <td data-list="1009"></td>
-            <td data-list="1010"></td>
-            <td data-list="1011"></td>
-            <td data-list="1012" style="background-image: url(./img/default.jpg); opacity: 1;"></td>
-            <td data-list="1013"></td>
-            <td data-list="1014" class="right"></td></tr><tr><td data-list="1100" class="left"></td>
-            <td data-list="1101"></td>
-            <td data-list="1102"></td>
-            <td data-list="1103"></td><td data-list="1104"></td><td data-list="1105"></td><td data-list="1106"></td><td data-list="1107"></td><td data-list="1108"></td><td data-list="1109"></td><td data-list="1110"></td><td data-list="1111"></td><td data-list="1112"></td><td data-list="1113"></td><td data-list="1114" class="right" style="background-image: url(./img/right.jpg); opacity: 1;"></td></tr><tr><td data-list="1200" class="left"></td><td data-list="1201"></td><td data-list="1202"></td><td data-list="1203"></td><td data-list="1204"></td><td data-list="1205"></td><td data-list="1206"></td><td data-list="1207"></td><td data-list="1208"></td><td data-list="1209"></td><td data-list="1210"></td><td data-list="1211"></td><td data-list="1212"></td><td data-list="1213"></td><td data-list="1214" class="right"></td></tr><tr><td data-list="1300" class="left"></td><td data-list="1301"></td><td data-list="1302"></td><td data-list="1303"></td><td data-list="1304"></td><td data-list="1305"></td><td data-list="1306"></td><td data-list="1307"></td><td data-list="1308"></td><td data-list="1309"></td><td data-list="1310"></td><td data-list="1311"></td><td data-list="1312"></td><td data-list="1313"></td><td data-list="1314" class="right"></td></tr><tr class="bottomline"><td data-list="1400" class="leftbottom"></td><td data-list="1401" class="bottom"></td><td data-list="1402" class="bottom"></td><td data-list="1403" class="bottom"></td><td data-list="1404" class="bottom"></td><td data-list="1405" class="bottom"></td><td data-list="1406" class="bottom"></td><td data-list="1407" class="bottom"></td><td data-list="1408" class="bottom"></td><td data-list="1409" class="bottom"></td><td data-list="1410" class="bottom"></td><td data-list="1411" class="bottom"></td><td data-list="1412" class="bottom"></td><td data-list="1413" class="bottom"></td><td data-list="1414" class="rightbottom"></td></tr></tbody></table>
-        <div id="usercount">
-          승리조건)<br>
-          3줄 15<br>
-          4줄 8<br>
-          5줄 3<br>
-          Black3Count : <span class="Black3Count">0</span><br>
-          Black4Count : <span class="Black4Count">0</span><br>	
-          Black5Count : <span class="Black5Count">0</span><br>	
-      
-          <br>
-          White3Count : <span class="White3Count">0</span><br>
-          White4Count : <span class="White4Count">0</span><br>
-          White5Count : <span class="White5Count">0</span><br>
-          <div class="gametxt"></div>
-        </div>
-       </div>
-       
-      
-      </body></html>
+<!doctype html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <title>4color4목</title>
+  <script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+<script>
+//함수기반 6목.
+$(function(){
+	var maxsize = 14;
+	var user = 1;//1:black, 2:white
+	var blackarr = [];//
+	var whitearr = [];
+	$("#board").width((maxsize+1)*41);
+	$(".Black3Count").html("0");
+	$(".White3Count").html("0");
+	$(".Black4Count").html("0");
+	$(".White4Count").html("0");
+	$(".Black5Count").html("0");
+	$(".White5Count").html("0");
+
+
+	//오목판 세팅.
+	for(var i =0;i<maxsize+1;i++){
+		$("#board").append("<tr></tr>");//<table id='board'><tr class='topline'></tr></table>
+		if(i==0){
+			$("#board tr").addClass("topline");
+		}else if(i==maxsize){
+			$("#board tr").eq(i).addClass("bottomline");//i = 0, 1, 2
+		}
+		
+		for(var j=0;j<maxsize+1;j++){
+			var row = "";
+			var col = "";
+			if(i<10){
+				row = "0"+i;
+			}else{
+				row = i;	
+			}
+			if(j<10){
+				col = "0"+j;
+			}else{
+				col = j;
+			}
+			$("#board tr:nth-child("+(i+1)+")").append("<td data-list='"+row+col+"'></td>");//<table id='board'><tr class='topline'><td data-list=0000 class='lefttop'></td><td class='top'></td></tr></table>
+			if(i==0){//맨 윗줄
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("lefttop");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("righttop");
+				}else{
+					$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("top");
+				}
+			}else if(i==maxsize){//맨 마지막줄
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("leftbottom");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("rightbottom");
+				}else{
+					$("#board tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")").addClass("bottom");
+				}
+			}else{//중간 줄.
+				if(j==0){
+					$("#board tr:nth-child("+(i+1)+") td:first").addClass("left");
+				}else if(j==maxsize){
+					$("#board tr:nth-child("+(i+1)+") td:last").addClass("right");
+				}
+			}
+		}
+	}
+	
+	var black3count = 0;
+	var white3count = 0;
+	var black4count = 0;
+	var white4count = 0;
+	
+	var originBG;
+	
+	//
+	class doll{
+		constructor(y,x){
+			this.row = y;
+			this.col = x;
+			this.iscount = false;
+			this.index =0;
+		}
+	}
+
+	$("#board td").click(function(){
+		resetBG(this);//this는 전체 td중에 클릭된 td
+		$(".gametxt").html('');	
+		if(!this.state){//아직 클릭되지 않은 td 였다면,
+			if(user==1){//black
+				
+				$(this).append("<img src='img/black.png'>");
+				var y = $(this).attr('data-list').substring(0,2);//0012.substring(0,끝인덱스번호)
+				var x = $(this).attr('data-list').substring(2,4);//0012
+				blackarr.push(new doll(y,x));//push, pop, shift, unshift, splice, slice	
+				//승리판단
+				isWin(user,blackarr);
+				
+			}else{
+				$(this).append("<img src='img/white.png'>");
+				var y = $(this).attr('data-list').substring(0,2);
+				var x = $(this).attr('data-list').substring(2,4);
+				whitearr.push(new doll(y,x));	
+				//승리판단
+				isWin(user,whitearr);
+			}
+			this.state = 1;			
+			
+			user==1 ? user = 2 : user =1;
+			dollcount = 0;
+			
+		}else{
+			$(".gametxt").html('이미 둔 곳 입니다.');
+		}		
+	});
+	
+	$("#board td").hover(function(){
+		//origin background
+		originBG = $(this).css('background-image');//현재 적용된 background-image 값을 가져온다.
+		console.dir(this);
+		if(!this.state){//this.state값이 없다면
+			if(user==1){
+				$(this).css({'background-image':'url(./img/black.png)','opacity':'0.2'});
+			}
+			else{
+				$(this).css({'background-image':'url(./img/white.png)','opacity':'0.2'});
+			}
+		}
+	},function(){
+		if(!this.state)
+			$(this).css({'background-image':originBG,'opacity':'1'});
+	});
+
+	function resetBG(obj){
+		$(obj).css({'background-image':originBG,'opacity':'1'});//현재 적용된 background-image
+	}
+
+	//array [], {}
+	var winRule = {
+		count3 : 15,
+		count4 : 8,
+		count5 : 3
+	}
+
+	function wincount(user,arr,maxcount){
+		
+		if(maxcount ==4){
+			let count = 0;
+			for(let item of arr){
+				item.iscount = false;
+				item.index = count;
+				count++;
+			}
+			if(user==1){
+				$(".Black3Count").html("0");
+			}else{
+				$(".White3Count").html("0");
+			}
+		}
+		
+		var wincheckcount = 0;
+
+		if(arr.length >=maxcount){
+			
+			var linecount=0; //동일 행판단.
+			//0도 판단.
+			arr.some(function(item){
+				//기준점.
+				var srci = item.row;//행번호.
+				var srcj = item.col;//열번호.
+				var setWinner = false;
+				linecount = 0;
+				arr.some(function(item2){
+					//기준점과 다음돌 비교.
+
+					var targeti = item2.row;
+					var targetj = item2.col;
+					let lastindex = 0;
+					if(srci == targeti && srcj == targetj){
+						//첫번째 동일 돌 카운트1.
+						linecount = 1;
+					}else{
+						if(maxcount ==3){
+							//if(item2.iscount == false){
+								if(srci == targeti && Math.abs(targetj - srcj) < maxcount){							
+									linecount++;
+									
+								}
+							//}
+							//console.log(item2);
+						}else{//4,5
+							if(srci == targeti && Math.abs(targetj - srcj) < maxcount){							
+								linecount++;
+								lastindex =  item2.index;
+							}
+						}
+					}
+					if(linecount == maxcount){
+						linecount =0;
+						wincheckcount++;
+						if(maxcount ==4){
+							//console.log(lastindex);
+							//console.log(arr);
+							arr[lastindex].iscount = true;
+							arr[lastindex-1].iscount = true;
+							arr[lastindex-2].iscount = true;
+							arr[lastindex-3].iscount = true;
+							if(user==1){
+								$(".Black4Count").html(wincheckcount);
+							}else{
+								$(".White4Count").html(wincheckcount);
+							}
+						}else if(maxcount ==3){
+							if(user==1){
+								$(".Black3Count").html(wincheckcount);
+							}else{
+								$(".White3Count").html(wincheckcount);
+							}
+						}else if(maxcount ==5){
+							if(user==1){
+								$(".Black5Count").html(wincheckcount);
+							}else{
+								$(".White5Count").html(wincheckcount);
+							}
+						}
+					}
+					
+					if(maxcount==5 && wincheckcount >= winRule.count5){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==4 && wincheckcount >= winRule.count4){
+						//console.log(arr);
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==3 && wincheckcount >= winRule.count3){
+						//console.log(arr);
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+				});
+				if(setWinner)
+					return item;
+			});
+
+			//90도 판단.
+			var linecount=0; //동일 열판단.
+			arr.some(function(item){
+				//기준점.
+				var srci = item.row;//행번호.
+				var srcj = item.col;//열번호.
+				var setWinner = false;
+				linecount = 0;
+				arr.some(function(item2){
+					//기준점과 다음돌 비교.
+					var targeti = item2.row;
+					var targetj = item2.col;
+					let lastindex = 0;
+					
+					if(srci == targeti && srcj == targetj){
+						//첫번째 동일 돌 카운트1.
+						linecount = 1;
+					}else{
+						if(maxcount ==3){
+							//if(item2.iscount == false){
+								if(Math.abs(srci-targeti)< maxcount && srcj==targetj ){						
+									linecount++;
+								}
+							//}
+						}else{//4,5
+							if(Math.abs(srci-targeti)< maxcount && srcj==targetj ){						
+								linecount++;
+								lastindex =  item2.index;
+							}
+						}
+					}
+
+					if(linecount == maxcount){
+						linecount =0;
+						wincheckcount++;
+						if(maxcount ==4){
+							arr[lastindex].iscount = true;
+							arr[lastindex-1].iscount = true;
+							arr[lastindex-2].iscount = true;
+							arr[lastindex-3].iscount = true;
+							if(user==1){
+								$(".Black4Count").html(wincheckcount);
+							}else{
+								$(".White4Count").html(wincheckcount);
+							}
+						}else if(maxcount ==3){
+							if(user==1){
+								$(".Black3Count").html(wincheckcount);
+							}else{
+								$(".White3Count").html(wincheckcount);
+							}
+						}else if(maxcount ==5){
+							if(user==1){
+								$(".Black5Count").html(wincheckcount);
+							}else{
+								$(".White5Count").html(wincheckcount);
+							}
+						}	
+					}
+					if(maxcount==5 && wincheckcount >= winRule.count5){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==4 && wincheckcount >= winRule.count4){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==3 && wincheckcount >= winRule.count3){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+				});
+				if(setWinner)
+					return item;
+			});
+
+			//45도 판단.sorting을 했기 때문에 225도방향으로만 고려.
+			var linecount=0; //45도 판단카운트.
+			arr.some(function(item){
+				//기준점.
+				var srci = item.row;//행번호.
+				var srcj = item.col;//열번호.
+				var setWinner = false;
+				linecount = 0;
+				let count4except = [];
+				//for(let k in arr){
+				//	var item2 = arr[k];
+				arr.some(function(item2){
+					//기준점과 다음돌 비교.
+					var targeti = item2.row;
+					var targetj = item2.col;
+					
+					if(srci == targeti && srcj == targetj){
+						//첫번째 동일 돌 카운트1.
+						linecount = 1;
+						count4except.push(item2);
+					}else{
+						var stepi=0; //계단차이값 구하기.
+						var stepj=0;
+						if(maxcount ==3){
+							//if(item.iscount == false && item2.iscount == false){
+								if(srci<targeti && srcj>targetj){
+									stepi = Math.abs(srci - targeti);
+									stepj = Math.abs(srcj - targetj);	
+									if(stepi == stepj && stepi<maxcount){
+										//console.log(arr);
+										//console.log(item2);
+										linecount++;
+									}
+								}
+							//}
+						}else{//4,5
+							
+							if(srci<targeti && srcj>targetj){
+								stepi = Math.abs(srci - targeti);
+								stepj = Math.abs(srcj - targetj);	
+								if(stepi == stepj && stepi<maxcount){
+									linecount++;
+									count4except.push(item2);
+								}
+							}
+						}
+					}
+					if(linecount == maxcount){
+						linecount =0;
+						wincheckcount++;
+						if(maxcount ==4){
+							console.log('except',count4except);
+							console.log('all',arr);
+							for(let item of count4except){
+								item.iscount = true;
+							}
+							if(user==1){
+								$(".Black4Count").html(wincheckcount);
+							}else{
+								$(".White4Count").html(wincheckcount);
+							}
+						}else if(maxcount ==3){
+							if(user==1){
+								$(".Black3Count").html(wincheckcount);
+							}else{
+								$(".White3Count").html(wincheckcount);
+							}
+						}else if(maxcount ==5){
+							if(user==1){
+								$(".Black5Count").html(wincheckcount);
+							}else{
+								$(".White5Count").html(wincheckcount);
+							}
+						}	
+					}
+
+					
+					
+					if(maxcount==5 && wincheckcount >= winRule.count5){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==4 && wincheckcount >= winRule.count4){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==3 && wincheckcount >= winRule.count3){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+				});
+				if(setWinner)
+					return item;
+			});
+
+			//135도 판단.sorting을 했기 때문에 -45도만 고려.
+			var linecount=0; //135도 판단카운트.
+			arr.some(function(item){
+				//기준점.
+				var srci = item.row;//행번호.
+				var srcj = item.col;//열번호.
+				var setWinner = false;
+				linecount = 0;
+				let count4except = [];
+				arr.some(function(item2){
+					//기준점과 다음돌 비교.
+					var targeti = item2.row;
+					var targetj = item2.col;
+					if(srci == targeti && srcj == targetj){
+						//첫번째 동일 돌 카운트1.
+						linecount = 1;
+						count4except.push(item2);
+					}else{
+						var stepi=0; //계단차이값 구하기.
+						var stepj=0;
+						if(maxcount ==3){
+							//if(item.iscount == false && item2.iscount == false){
+								if(srci<targeti && srcj<targetj){
+									stepi = Math.abs(srci - targeti);
+									stepj = Math.abs(srcj - targetj);	
+									if(stepi == stepj && stepi<maxcount)
+										linecount++;
+								}
+							//}
+						}else{//4,5
+							if(srci<targeti && srcj<targetj){
+								stepi = Math.abs(srci - targeti);
+								stepj = Math.abs(srcj - targetj);	
+								if(stepi == stepj && stepi<maxcount){
+									linecount++;
+									count4except.push(item2);
+								}
+							}
+						}					
+					}
+					if(linecount == maxcount){
+						linecount =0;
+						wincheckcount++;
+						if(maxcount ==4){
+							console.log('except',count4except);
+							console.log('all',arr);
+							for(let item of count4except){
+								item.iscount = true;
+							}
+							if(user==1){
+								$(".Black4Count").html(wincheckcount);
+							}else{
+								$(".White4Count").html(wincheckcount);
+							}
+						}else if(maxcount ==3){
+							if(user==1){
+								$(".Black3Count").html(wincheckcount);
+							}else{
+								$(".White3Count").html(wincheckcount);
+							}
+						}else if(maxcount ==5){
+							if(user==1){
+								$(".Black5Count").html(wincheckcount);
+							}else{
+								$(".White5Count").html(wincheckcount);
+							}
+						}
+					}
+					if(maxcount==5 && wincheckcount >= winRule.count5){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==4 && wincheckcount >= winRule.count4){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+					if(maxcount==3 && wincheckcount >= winRule.count3){
+						winPlayer(user);
+						setWinner =true;
+						return item2;
+					}
+				});
+				if(setWinner)
+					return item;
+			});
+		}	
+	}
+	
+	var windollcount = 5;
+	function isWin(user,arr){
+		arr.sort(function(left,right){
+			//left : 1011 - 12 = 양수/0 , 음수.
+			//right : 0012
+			return (left.row + left.col) - (right.row + right.col);
+		});
+		wincount(user,arr,5);
+		wincount(user,arr,4);
+		wincount(user,arr,3);//쌍삼 막기.
+		//count3(user,arr);
+
+	}
+	
+	function winPlayer(user){
+		if(user == 1){
+			$(".gametxt").html('black 플레이어가 승리했습니다.');			
+		}else{
+			$(".gametxt").html('white 플레이어가 승리했습니다.');
+		}
+		$(".gametxt").append("<input type='button' value='다시하기' id='replay'>");
+	}
+	$(document).on("click","#replay",function(){ 
+		location.reload();
+	});
+});
+</script>
+ </head>
+ <body>
+<div class="aligncenter">
+  <table id="board" cellpadding="0" cellspacing="0">	
+  </table>
+  <div id="usercount">
+	승리조건)<br>
+	3줄 15<br>
+	4줄 8<br>
+	5줄 3<br>
+	Black3Count : <span class="Black3Count"></span><br>
+	Black4Count : <span class="Black4Count"></span><br>	
+	Black5Count : <span class="Black5Count"></span><br>	
+
+	<br>
+	White3Count : <span class="White3Count"></span><br>
+	White4Count : <span class="White4Count"></span><br>
+	White5Count : <span class="White5Count"></span><br>
+	<div class="gametxt"></div>
+  </div>
+ </div>
+ </body>
+</html>

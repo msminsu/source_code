@@ -1,4 +1,8 @@
 .history/
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0d101ff36c7124726fbdf38ffef4a03f5ad1c8c7
 node_modules/
 .idea/
 package-lock.json

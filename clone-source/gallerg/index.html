@@ -1,0 +1,512 @@
+<html lang="ko"><head>
+    <meta charset="UTF-8">
+    <title>html5 슈팅</title>
+    <style>
+    *{
+    padding:0;
+    margin:0;
+    }
+    #canvas {
+        margin: auto;
+        display: block;
+        background-color: #070719;
+      }
+    </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+  $(function(){
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');//2d환경정보.
+  canvas.width = 500;
+  canvas.height = 500;
+  
+  // input setup
+  var keyState = []; 
+  keyState.length = 256;
+  canvas.addEventListener('keydown', onKeyDown); //IE 9 이상.
+  canvas.addEventListener('keyup', onKeyUp);
+  
+  // key setup
+  var keyUp = 38; //key code 값. ↑
+  var keyDown = 40;// ↓
+  var keyLeft = 37;// ←
+  var keyRight = 39;//→
+  var keyShoot = 32; //space bar
+  var keyStart = 13; //enter
+  
+  // fps
+  var FPS = 30; //frame per second
+  
+  // game start?
+  var start = false;
+  
+  var score = 0;
+  
+  // create player object
+  var player = new Player();
+  
+  // storing in-game objects
+  var pBullets = [];
+  var enemies = [];
+  var bParticles = [];
+  
+  // weapon delay
+  var w_delay = 0;
+  
+  // player hit delay
+  var hit_delay = 0;
+  
+  // keydown functions
+  function onKeyDown(event) {
+    keyState[event.keyCode] = true;
+    console.log(event.keyCode);
+  }
+  
+  function onKeyUp(event) {
+    keyState[event.keyCode] = false;
+  }
+  
+  
+  
+  ///////////////////////////////////////////////////
+  // Player Class
+  function Player() {
+    // private variables
+    var HP = 150;
+    var dmg = 1;
+    var w_type = 1; //weapon type
+    var cd_factor = 10; 
+  
+    this.weapontype = 1;
+    
+    // private methods
+    this.getHP = function() {
+      return HP;
+    };
+    this.getHit = function() {
+      HP -= 50;
+      hit_delay = 100; //다음 hit 동안 딜레이.
+    };
+    this.getWtype = function() {
+      return w_type;
+    };
+    this.getCD = function() {
+      return cd_factor;
+    };
+    this.upgradeWeapon = function(){
+      this.weapontype++;
+    }
+    
+    // public properties
+    this.active = true;
+    this.color = "white";
+    this.width = 35;
+    this.height = 35;
+  
+    this.x = canvas.width/2;//시작위치 x
+    this.y = canvas.height - this.height;//시작위치 y
+  }
+  
+  Player.prototype.draw = function() {
+    if (hit_delay > 0) { //hitting 동안.
+      if (Math.sin(hit_delay) > 0) {
+        ctx.fillStyle = "red";
+      } else {
+        ctx.fillStyle = this.color;
+      }
+    } else {
+      ctx.fillStyle = this.color;
+    }
+    
+      ctx.beginPath();
+      ctx.moveTo(this.x,this.y);
+      ctx.lineTo(this.x-this.width/2,this.y+this.height);
+      ctx.lineTo(this.x+this.width/2,this.y+this.height);
+      //closePath : 마지막 지점과 처음 지점을 연결
+      ctx.closePath();
+      ctx.lineWidth = 5;
+      //ctx.drawColor = "green";
+      //ctx.fillStyle = this.color;
+      ctx.fill();
+    //ctx.fillRect(this.x, this.y, this.width, this.height);//채워진 사각형 그리기.
+  
+  
+  };
+  
+  Player.prototype.shoot = function() {
+  
+    if(w_delay === 0) { //총알발사.
+       var weapontype = player.weapontype;
+      console.log('weapontype',weapontype);
+      if(weapontype ==1){
+          pBullets.push(new Bullet({
+            vel: 7,
+            x: this.x ,
+            y: this.y
+          }));
+      }else if(weapontype==2){
+          pBullets.push(new Bullet({
+            vel: 7,
+            x: this.x-4 ,
+            y: this.y
+          }),new Bullet({
+            vel: 7,
+            x: this.x+4 ,
+            y: this.y
+          }));
+      }else if(weapontype==3){
+          pBullets.push(new Bullet({
+            vel: 7,
+            x: this.x-8 ,
+            y: this.y
+          }),new Bullet({
+            vel: 7,
+            x: this.x ,
+            y: this.y
+          })
+          ,new Bullet({
+            vel: 7,
+            x: this.x+8 ,
+            y: this.y
+          }));
+      }else if(weapontype==4){
+          pBullets.push(new Bullet({
+            vel: 7,
+            x: this.x-10 ,
+            y: this.y
+          }),new Bullet({
+            vel: 7,
+            x: this.x-3 ,
+            y: this.y
+          })
+          ,new Bullet({
+            vel: 7,
+            x: this.x+3 ,
+            y: this.y
+          })
+          ,new Bullet({
+            vel: 7,
+            x: this.x+10 ,
+            y: this.y
+          }));
+      }else if(weapontype==5){
+          pBullets.push(new Bullet({
+            vel: 7,
+            x: this.x-12 ,
+            y: this.y
+          }),new Bullet({
+            vel: 7,
+            x: this.x-4 ,
+            y: this.y
+          })
+          ,new Bullet({
+            vel: 7,
+            x: this.x ,
+            y: this.y
+          })
+          ,new Bullet({
+            vel: 7,
+            x: this.x+4 ,
+            y: this.y
+          })
+          ,new Bullet({
+            vel: 7,
+            x: this.x+12 ,
+            y: this.y
+          }));
+      }
+      w_delay = 70; //다음발사까지 딜레이.
+    }
+  };
+  ///////////////////////////////////////////////////
+  
+  
+  
+  ///////////////////////////////////////////////////
+  // 총알.
+  function Bullet(bullet) {
+    this.active = true;
+    this.color = "yellow";
+    this.yVel = -bullet.vel;
+    this.width = 2;
+    this.height = 8;
+    this.x = bullet.x;
+    this.y = bullet.y;
+  }
+  
+  //총알이 캔버스 영역 안에 있는가?
+  Bullet.prototype.inBounds = function() {
+    return this.x >= 0 && this.x <= canvas.width &&
+           this.y >= 0 && this.y <= canvas.height;
+  };
+  
+  
+  //총알 그리기
+  Bullet.prototype.draw = function() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  };
+  
+  //매프레임 총알 위치 업데이트.
+  Bullet.prototype.update = function() {
+    this.y += this.yVel;
+    this.active = this.inBounds() && this.active;
+  };
+  
+  //총알 지우기
+  Bullet.prototype.die = function() {
+    this.active = false;
+  };
+  
+  
+  // Enemy Class
+  function Enemy() {
+    this.active = true;
+    this.color = "red";
+    this.x = canvas.width * Math.random();
+    this.y = 0;
+    this.xVel = 0;
+    this.yVel = 4;
+    this.width = 30;
+    this.height = 30;
+  }
+  
+  //적이 캔버스 안에 있는가?
+  Enemy.prototype.inBounds = function() {
+    return this.x >= 0 && this.x <= canvas.width &&
+           this.y >= 0 && this.y <= canvas.height;  
+  };
+  
+  
+  //화면에 다시 그리기.
+  Enemy.prototype.draw = function() {
+    ctx.fillStyle = this.color;
+     ctx.beginPath();
+      ctx.moveTo(this.x,this.y);
+      ctx.lineTo(this.x+this.width,this.y);
+      ctx.lineTo(this.x+this.width/2,this.y+this.height);
+      ctx.closePath();
+      ctx.lineWidth = 5;
+      //ctx.drawColor = "green";
+      //ctx.fillStyle = this.color;
+      ctx.fill();
+  
+   // ctx.fillRect(this.x, this.y, this.width, this.height);
+  };
+  
+  //좌표값 갱신.
+  Enemy.prototype.update = function() {
+    if (Math.abs(player.y - this.y) < 200) {
+      if ((player.x - this.x) > 0) {//플레이어 위치보다 왼쪽에 있다면
+        this.xVel = 2;
+      } else if ((player.x - this.x) < 0) {//플레이어 위치보다 오른쪽에 있다면
+        this.xVel = -2;
+      } else {//x축 일치.
+        this.xVel = 0;
+      }
+    }
+    this.x += this.xVel;
+    this.y += this.yVel;
+    this.active = this.active && this.inBounds();
+  };
+  
+  Enemy.prototype.die = function() {
+    this.active = false;
+    score += 10;
+    if(score == 100 || score==300 || score == 500 || score==1000){
+      player.upgradeWeapon();
+    }
+  };
+  
+  
+  // 백그라운드 별.
+  function Particle() {
+    this.x = Math.random() * canvas.width;
+    this.y = 0;
+    this.xVel = 0;
+    this.yVel = 1;
+    this.width = 1;
+    this.height = 1;
+    this.color = "#F2F5A9";
+    this.active = true;
+  }
+  
+  Particle.prototype.inBounds = function() {
+    return this.x >= 0 && this.x <= canvas.width &&
+           this.y >= 0 && this.y <= canvas.height;  
+  };
+  
+  Particle.prototype.draw = function() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  };
+  
+  Particle.prototype.update = function() {
+    this.y += this.yVel;
+    this.active = this.active && this.inBounds();
+  };
+  ///////////////////////////////////////////////////
+  
+  
+  ///////////////////////////////////////////////////
+  function collisionCheck(a, b) { //두 객체 사이의 충돌체크
+    return a.x < b.x + b.width &&
+           a.x + a.width > b.x &&
+           a.y < b.y + b.height &&
+           a.y + a.height > b.y;
+  }
+  
+  function collisionOccurs() { //충돌발생 체크.
+    pBullets.forEach(function(bullet) {//모든 총알 조사.
+      enemies.forEach(function(enemy) {//모든 적들 조사.
+        if (collisionCheck(bullet, enemy)) {
+          bullet.die();//없애기
+          enemy.die();//적 없애기.
+        }
+      });
+    });
+    
+    //적과 플레이어 충돌처리.
+    enemies.forEach(function(enemy) {
+      if (collisionCheck(enemy, player)) {
+        if (hit_delay === 0) {
+          enemy.die();
+          player.getHit();
+        }
+      }
+    });
+  }
+  ///////////////////////////////////////////////////
+  
+  
+  
+  // interval functions
+  setInterval(function() {
+    canvas.focus();//키보드 이벤트 수신.
+    startGame();//시작여부.
+    if (start) {
+      if (player.getHP() > 0) //플레이어가 살아있다면.
+        update(); //이동처리.
+      draw();
+    }
+  },1000/FPS); //매 0.33 초 마다 발생.
+  
+  function startGame() {
+    if (!start) {
+      ctx.font = "30pt serif";
+      ctx.fillStyle = "white";
+      ctx.fillText("시작하려면 Enter", 47, 180);
+      ctx.font = "20pt serif";
+      ctx.fillText("방향키 - move", 47, 210);
+      ctx.fillText("Spacebar - 총쏘기", 47, 240);
+    }
+      if(keyState[keyStart])
+        start = true;  
+  }
+  $("#canvas").click(function(){
+      start = true;
+  });
+  
+  
+  function update() {
+    // 키보드 이동처리.
+    if(keyState[keyUp] && player.y > 0)
+      player.y -= 4;
+    if(keyState[keyDown] && player.y < canvas.height - player.height)
+      player.y += 4;
+    if(keyState[keyLeft] && player.x > 0)
+      player.x -= 4;
+    if(keyState[keyRight] && player.x < canvas.width - player.width)
+      player.x += 4;
+    
+    // background particles
+    if(Math.random() < 0.04)
+      bParticles.push(new Particle());
+    
+    bParticles.forEach(function(particle) {
+      particle.update();
+    });
+    
+  
+    bParticles = bParticles.filter(function(particle) {//배열 filter 재생성.
+      return particle.active;
+    });
+    
+    // 총알 발사.
+    if(keyState[keyShoot])
+      player.shoot();
+    
+    //총알 이동처리.
+    pBullets.forEach(function(bullet) {
+      bullet.update();
+    });
+    
+    pBullets = pBullets.filter(function(bullet) { //총알배열 재생성.
+      return bullet.active;
+    });
+    
+    //매프레임마다 -10씩 깍임. 7프레임이 지나야 다시 총알 발사 가능.
+    if(w_delay > 0)
+      w_delay -= player.getCD();
+    
+    // enemies 랜덤하게 생성.
+    if(Math.random() < 0.14)
+      enemies.push(new Enemy());
+    
+    enemies.forEach(function(enemy) {
+      enemy.update();//위치이동.
+    });
+    
+    enemies = enemies.filter(function(enemy) {//살아있는 적만 필터링.
+      return enemy.active;
+    });
+    
+    // 충돌 체크.
+    collisionOccurs();
+    
+    if (hit_delay > 0)
+      hit_delay -= 1;
+      
+  }
+  
+  //모든 오브젝트 다시 그리기.
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+   
+    bParticles.forEach(function(particle) {
+      particle.draw();
+    });
+    
+    player.draw();
+    
+    pBullets.forEach(function(bullet) {
+      bullet.draw();
+    });
+    
+    enemies.forEach(function(enemy) {
+      enemy.draw();
+    });
+    
+    // game over
+    if (player.getHP() <= 0) {
+      ctx.font = "20pt serif";
+      ctx.fillStyle = "white";
+      ctx.fillText("Game Over", 170, 220);
+    }
+  
+    // keeping score
+    ctx.font = "8pt serif";
+    ctx.fillStyle = "white";
+    ctx.fillText(score, 5, 15); 
+  }
+  });
+  
+  //http://tcpschool.com/html/html5_graphic_canvasVsSvg : canvas vs svg
+  //https://svgontheweb.com/ko/#resources
+    </script>
+   </head>
+   <body>
+      <canvas id="canvas" tabindex="0" width="500" height="500"></canvas>
+   
+  
+  </body></html>
