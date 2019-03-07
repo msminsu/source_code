@@ -1,2 +1,12 @@
+// import './style.scss';
+require('./style.scss');
 import sayHello from './sayhello';
-console.log(sayHello());
+
+
+
+let test =  () => {
+    console.log(20);
+}
+
+test();
+console.log(sayHello(), 10);

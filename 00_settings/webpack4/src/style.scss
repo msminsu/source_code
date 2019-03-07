@@ -1,0 +1,9 @@
+$bluegrey: #2B3A42;
+
+body{
+  display: block;
+  height: 100%;
+  color: #dedede;
+  text-shadow: 0 1px 1px rgba(#000, .5);
+  background: url(test.png) no-repeat 50% 50%  $bluegrey;
+}

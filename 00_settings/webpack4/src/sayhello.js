@@ -1,3 +1,4 @@
+
 export default function sayHello() {
-    return 'HELLO WEPACK4';
+    return 'HELLO WEPACK';
 }
