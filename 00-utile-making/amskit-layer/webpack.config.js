@@ -4,14 +4,13 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 var config = {
   output: {
-    filename: "promokit-layer.js",
+    filename: "amskit-layer.js",
     path: path.resolve(__dirname, "dist"),
     libraryTarget: "umd",
   },
   devServer: {
     contentBase: "./dist",
     hot: true,
-    host: "172.20.60.44",
   },
   module: {
     rules: [
