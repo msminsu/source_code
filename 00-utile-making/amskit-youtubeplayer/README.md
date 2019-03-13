@@ -1,6 +1,6 @@
-# promokit-youtubeplayer
+# amskit-youtubeplayer
 
-> promokit youtube player
+> amskit youtube player
 
 <br>
 
@@ -17,7 +17,7 @@ npm run dev
 
 ## Install
 ```
-npm install --save promokit-youtubeplayer
+npm install --save amskit-youtubeplayer
 ```
 
 <br>
@@ -26,7 +26,7 @@ npm install --save promokit-youtubeplayer
 load js module
 ```
 // ES6 modules  
-import VideoPlayer from "promokit-youtubeplayer"
+import VideoPlayer from "amskit-youtubeplayer"
 
 var player1 = new YoutubePlayer({
   el: "#player1",
@@ -69,7 +69,7 @@ var player1 = new YoutubePlayer({
 ```
 
 // ES6 modules  
-import VideoPlayer from "promokit-youtubeplayer"
+import VideoPlayer from "amskit-youtubeplayer"
 
 var player1 = new YoutubePlayer({
   el: "#player1",

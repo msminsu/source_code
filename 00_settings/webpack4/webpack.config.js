@@ -21,6 +21,9 @@ const config = {
             color: true
           }
       },
+      plugins:{
+          
+      },
       module: {
           rules: [
               {

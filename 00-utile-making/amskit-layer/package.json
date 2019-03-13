@@ -1,8 +1,8 @@
 {
-  "name": "promokit-layer",
+  "name": "amskit-layer",
   "version": "1.0.8",
   "description": "layer module for promotion",
-  "main": "dist/promokit-layer.js",
+  "main": "dist/amskit-layer.js",
   "scripts": {
     "dev": "webpack-dev-server --open --mode=development",
     "build": "webpack --mode=production"
@@ -14,7 +14,7 @@
   "keywords": [
     "layer",
     "promotion",
-    "promokit"
+    "amskit"
   ],
   "author": "",
   "license": "ISC",
@@ -38,6 +38,6 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
-    "promokit-util": "^1.1.0"
+    "amskit-util": "^1.1.0"
   }
 }
