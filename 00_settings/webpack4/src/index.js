@@ -1,12 +1,11 @@
 // import './style.scss';
 // require('./style.scss');
-import './style.scss';
+// import './style.scss';
+
 import sayHello from './sayhello';
-import {$,jQuery} from 'jquery';
-
-
+import $ from 'jquery';
 // import MyFunction from './jstest'
-import Layer from './jstest'
+import Layer from './modal/Layer'
 
 /* 
 
@@ -20,10 +19,25 @@ console.log(sayHello(), 10); */
 
 
 // MyFunction();
-var layer1 = new Layer();
+window.layer1 = new Layer({
+    modifier: "movie",
+    esc: false,
+  });
 
-// layer1.open();
 
-console.log(200);
-layer1.open(document.querySelector("body").innerHTML);
+// layer1.open('<div>test</div>');
+
+$('button').on('click',function(){
+    layer1.open(document.querySelector(".modal").innerHTML);
+
+    
+})
+layer1.on("layeropenstart", () => {
+    console.log("layeropenstart");
+  });
+/* 
+layer1.on("layeropenstart", () => {
+    console.log("layeropenstart");
+  });
+ */
 // console.log($('body'))
