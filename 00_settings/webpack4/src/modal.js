@@ -1,7 +1,9 @@
 import './modal.scss';
+import {$,jQuery} from 'jquery';
 
 class Modal {
     consturctor(_config) {
+        console.log(100)
         this.config = Object.assign({
             "esc": true,
             "dim": true,
@@ -65,7 +67,7 @@ fireEvent(event){
 
 open(contents) {
     if (this.state.isActive) return;// 팝업이 열려 있는지 체크
-
+console.log(10);
     this.fireEvent(this.EVENT.OPENSTART);
 
     if(contents) {

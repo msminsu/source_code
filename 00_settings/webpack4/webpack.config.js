@@ -65,7 +65,9 @@ module.exports = (env, options) => {
             // new webpack.NamedModulesPlugin(),//브라우저에서 HMR 에러발생시 module name 표시
             new HtmlWebpackPlugin({
                 title: 'Development',
-                // filename: 'test.html',
+                 filename: 'test1.html',
+                 
+      template: "test1.html",
                 showErrors: true // 에러 발생시 메세지가 브라우저 화면에 노출
             })
         ];

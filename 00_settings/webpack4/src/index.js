@@ -24,6 +24,6 @@ var layer1 = new Layer();
 
 // layer1.open();
 
-
+console.log(200);
 layer1.open(document.querySelector("body").innerHTML);
 // console.log($('body'))
