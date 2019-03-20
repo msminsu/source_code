@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>preloader.js</title>
+    <style>
+        *{ margin:0; padding:0; }
+        
+        body, html{ height:100%; font-size:100%; }
+        
+        textarea{ width:100%; height:100%; box-sizing:border-box; resize:none; padding:15px; border:1px solid #cecece; outline:0; }
+        
+        select{ width:100%; height:30px; background:#fff; border:1px solid #cecece; }
+        
+        .section-input{ float:left; width:50%; height:100%; padding:15px; box-sizing:border-box; border:1px solid #cecece; }
+        
+        .section-input__item{ position:relative; margin-top:15px; border-bottom:1px dashed #cecece; padding-bottom:15px; }
+        
+        .section-input__item:first-child{ margin-top:0; }
+        
+        .section-input__item label{ display:block; line-height:30px; height:30px; }
+        
+        .section-input__item input[type=text]{ width:100%; box-sizing:border-box; height:30px; line-height:30px; border:1px solid #cecece; padding:5px; }
+        
+        .section-input__item input[type=text] + input[type=text]{ margin-top:5px; }
+        
+        .section-input__item input[type=text]:disabled{ background:#efefef; cursor:not-allowed; }
+        
+        .section-input__item input[type=file]{ width:100%; box-sizing:border-box; padding:6px; border:1px solid #cecece; }
+        
+        .section-input__item .section-input{ display:block; padding-left:200px; }
+        
+        .section-output{ float:left; width:50%; height:100%; padding:15px; box-sizing:border-box; border:1px solid #cecece; border-left:0; }
+        
+        #header{ position:absolute; top:0; left:0; width:100%; height:110px; padding:15px; box-sizing:border-box; }
+        
+        #header h1{ background-color:#262f64; padding:20px; border-radius:4px; color:#fff; }
+        
+        #contents{ height:100%; box-sizing:border-box; padding:110px 15px 15px; clear:both; content:''; display:block; }
+        
+        .section-title{ border-bottom:2px solid #cecece; padding-bottom:10px; margin-bottom:30px; }
+        
+        .input-title{ height:30px; line-height:30px; font-weight:normal; }
+        
+        .default-value{ font-size:12px; color:#888; font-weight:normal; }
+        
+        p{ font-size:12px; margin:5px 0; }
+        
+        .version{ font-size:16px; }
+        
+        .options{ margin-top:20px; border:1px solid #ccc; border-collapse:collapse; padding:10px 0; font-size:12px; width:100%; }
+        
+        th{ background:#eee; }
+        
+        th, td{ padding:5px; border:1px solid #ccc; text-align:left; }
+        
+        .options caption{ text-align:left; font-size:19px; height:30px; line-height:30px; font-weight:normal; }
+    </style>
+</head>
+<body>
+<div id="header">
+    <h1>preloader.js <span class="version">(V1.0)</span></h1>
+</div>
+
+<div id="contents">
+    <div class="section-input">
+        <h2 class="section-title">옵션 설정</h2>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">resourcePath</h3>
+            <input type="text" id="static-path" placeholder="static 리소스 경로를 절대 경로로 입력해 주세요.(ex. /promo/bns/update/2017/update_170602)" />
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">preLoadList <span class="default-value">resourcePath 하위의 image 폴더를 선택해 주세요.</span>
+            </h3>
+            <input type="file" webkitdirectory id="getFile" />
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">game</span>
+            </h3>
+            <select id="gameName" title="게임">
+                <option value="aion">아이온</option>
+                <option value="lineage">리니지</option>
+                <option value="lineage2">리니지2</option>
+                <option value="lineage2classic">리니지2 클래식</option>
+                <option value="bns">블소</option>
+            </select>
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">
+                comment<span class="default-value">(default: 본 페이지는 Chrome/IE10 이상의 1920 x 1080 해상도에 최적화되어 있습니다.)(모바일은 자동 미노출)</span>
+            </h3>
+            <p>comment 미사용 &nbsp;<input type="checkbox" id="comment-none" /></p>
+            
+            <input type="text" id="comment" />
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">removeType <span class="default-value">(default: fadeOut)</span>
+            </h3>
+            <select id="removeType" title="로딩바 제거 효과">
+                <option value="fadeOut">fadeOut</option>
+                <option value="hide">hide</option>
+            </select>
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">drawSize <span class="default-value">(default: 1)</span></h3>
+            <select id="drawSize" title="로딩바의 그려지는 속도를 선택해 주세요.">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">delay <span class="default-value">(default:0)(단위:ms)</span></h3>
+            <input type="text" id="delay-time" placeholder="로딩 완료 후 로딩바가 사라지기전 delay time" />
+        </div>
+        
+        <div class="section-input__item">
+            <h3 class="input-title">theme <span class="default-value">(커스텀이 필요한 경우만 사용)</span></h3>
+            <input type="text" id="theme1" placeholder="off 이미지 스태틱 경로를 입력해 주세요.(ex. /uikit/preloader/v1/loader_lineage_off.png)" />
+            <input type="text" id="theme2" placeholder="on 이미지 스태틱 경로를 입력해 주세요.(ex. /uikit/preloader/v1/loader_lineage_off.png)" />
+            <input type="text" id="theme3" placeholder="배경 색상을 Hex 값으로 입력해 주세요.(ex. #10131c)" />
+        </div>
+    </div>
+    <div class="section-output">
+        <textarea id="output" readonly></textarea>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<script>
+    let staticPath = '';
+    let comment = '';
+    let loadList = '';
+    let theme1 = '';
+    let theme2 = '';
+    let theme3 = '';
+    let drawSize = 1;
+    let gameName = 'aion';
+    let delay = 0;
+    let removeType = 'fadeOut';
+    let noComment = false;
+
+    let includeScript = () =>{
+        let drawOption = '';
+        let commonetOption = '';
+        let removeTypeOption = '';
+        let themeOption = '';
+        let delayOption = '';
+        let gameOption = '';
+
+        if(drawSize > 1) {
+            drawOption = `\n\t\'drawSize\':${drawSize},`;
+        }
+
+        if(drawSize === 1) {
+            drawOption = ``;
+        }
+
+        gameOption = `\n\t\'game\':\'${gameName}\',`;
+
+        if(delay > 0) {
+            delayOption = `\n\t\'delay\':${delay},`;
+        }
+
+        if(comment) {
+            commonetOption = `\n\t\'comment\':'${comment}',`;
+        }
+
+        if(noComment) {
+            commonetOption = `\n\t\'comment\':false,`;
+        }
+
+        if(removeType !== 'fadeOut') {
+            removeTypeOption = `\n\t\'removeType\':'hide',`;
+        }
+
+        if(!!theme1 && !!theme2 && !!theme3) {
+            themeOption = `\n\t\'theme\':['${theme1}','${theme2}','${theme3}'],`;
+        }
+
+        return (`<script>
+    new nc.ui.Preloader({{${drawOption}${gameOption}${delayOption}${commonetOption}${removeTypeOption}${themeOption}
+        'resourcePath': '${staticPath}',
+        'preLoadList': [${loadList}
+        ]
+    });
+
+    $(document).on('preloadend', function(){
+        console.log('preload finish');
+    });
+<\/script>`);
+    };
+
+    $(document).on('refresh', function(){
+        $('textarea').text(includeScript());
+    });
+
+    $(document).on('keyup', '#static-path', function(){
+        staticPath = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('keyup', '#comment', function(){
+        comment = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('keyup', '#theme1', function(){
+        theme1 = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('keyup', '#theme2', function(){
+        theme2 = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('keyup', '#theme3', function(){
+        theme3 = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('change', '#removeType', function(){
+        removeType = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('change', '#drawSize', function(){
+        drawSize = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('change', '#gameName', function(){
+        gameName = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('change', '#comment-none', function(){
+        noComment = $(this)[0].checked;
+
+        if(noComment) {
+            $('#comment').attr('disabled', 'disabled');
+        } else {
+            $('#comment').removeAttr('disabled');
+        }
+
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('change', '#getFile', (e) =>{
+        loadList = '';
+        for(let file of e.target.files) {
+            if(/.(gif|png|jpg)/.test(file.webkitRelativePath)) {
+                loadList = loadList + ',\n\t\t\'/' + file.webkitRelativePath + '\'';
+            }
+        }
+
+        loadList = loadList.replace(',\n\t\t', '\n\t\t');
+
+        $(document).trigger('refresh');
+    });
+
+    $(document).on('keyup', '#delay-time', function(){
+        delay = $(this).val();
+        $(document).trigger('refresh');
+    });
+
+    $(document).trigger('refresh');
+</script>
+</body>
+</html>

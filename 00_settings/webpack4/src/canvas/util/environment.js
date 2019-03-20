@@ -1,7 +1,7 @@
 const environment = (href = location.href) => {
     const staticPath = {
         local: 'https://op.com',
-        rc: 'https://rc.com'
+        rc: 'https://rc.com',
         live: 'https://wstatic.com'
     };
 
