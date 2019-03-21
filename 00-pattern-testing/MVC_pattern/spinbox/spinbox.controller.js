@@ -1,7 +1,7 @@
 (function(exports){
     function SpinboxController(){
         this.spinboxModel = new SpinboxModel();
-        this.spinboxView = new spinboxView();
+        this.spinboxView = new SpinboxView();
 
         this.spinboxView.render(this.spinboxModel.getData());
 
@@ -11,3 +11,15 @@
      exports.SpinboxController = SpinboxController;
  
 })(this);
+
+
+SpinboxController.prototype = {
+    onClickIncrease: function () {
+        this.spinboxModel.increase();
+        this.spinboxView.render(this.spinboxModel.getData());
+    },
+    onClickDecrease: function () {
+        this.spinboxModel.decrease();
+        this.spinboxView.render(this.spinboxModel.getData());
+    }
+}
