@@ -1,0 +1,23 @@
+body{
+	background: tomato;
+	color: yellow;
+	*{margin: 0;padding: 0;}
+	li{list-style-type: none;}
+	dl{
+		width: 400px;
+		dt{ text-align: center;}
+		dd{}
+	}
+}
+
+
+@mixin custom-form-element-input(
+    $_type: $form-element-input-type,
+    $_background: $_type  +'__background',
+    $_border: $_type   +'__border'
+){
+ 
+    .#{$_border} {
+      border:1px solid red;
+    }
+}

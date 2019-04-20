@@ -13,7 +13,7 @@
 
 
        function checkArea() {
-
+ava
            for(var i =0; i < arr.length; i++){
             if ( wT > arr[i] ) {
                 $('.motion').eq(i).addClass("active");
@@ -80,7 +80,7 @@ let decreaser = makeCounter(predicates.decrease);
 console.log(decreaser());
 console.log(decreaser());
  */
-
+/* 
 let increase = function(num){
     return ++num;
 }
@@ -90,4 +90,73 @@ let decrease = function(num){
 
 let predicates = {increase, decrease};
 
- console.log( predicates(1))
+ console.log( predicates(1)) */
+
+
+/*  var funcs = [];
+
+ for( let i = 0; i < 10; i++){
+   funcs.push(function(){
+       console.log(i);
+   });
+ }
+ 
+funcs.forEach(function(func){
+    func();
+});
+ */
+
+function Lecture( name, teacher ) {
+    this.name  = name;
+    this.teacher = teacher;
+}
+
+Lecture.prototype.display = function() {
+    return this.teacher + " is teaching " + this.name;
+}
+
+function Schedule( lectures ) {
+    this.lectures = lectures;
+}
+
+Schedule.prototype.display = function() {
+    var str = "";
+
+    for( var i = 0; i < this.lectures.length; i++)
+        str += this.lectures[i].display() + " ";
+    
+    return str;
+}
+
+
+var mySchedule = new Schedule([
+    new Lecture("운동", '스미스'),
+    new Lecture('수학','존'),
+    new Lecture('영어', '테드')
+]);
+
+// console.log(mySchedule.display());
+
+
+function strict( types, args ) {
+    if( types.length != args.length ) {
+        throw "Invalid number of arguments. Expected" + types.length +", received "+ args.length + " insted," ;
+    }
+
+    for ( var i = 0; i < args.length; i++ ) {
+        if ( args[i].constructor != types[i] ){
+            throw "Invalid argument type. Expected " + types[i].name + ", received " + args[i].constructor.name + ' instead';
+        }
+    }
+}
+
+
+function userList(prefix , num , users) {
+   strict( [Number, Number, Array],arguments );
+
+    for( var i = 0 ; i< num ; i++ ) {
+        console.log(prefix + " : " + users[i]);
+    }
+}
+
+userList("KOREA", 200, ['바나나','수박','사과']);
