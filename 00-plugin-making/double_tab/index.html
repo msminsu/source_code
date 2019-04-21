@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		li{list-style:none}
+		a{display: inline-block;border:1px solid gray; color: gray; text-decoration: none}
+		ul{overflow: hidden;}
+		ul li{float:Left;}
+
+		.category li.active{ background: tan;}
+		.sizeCon{display: none;}
+		.sizeCon:first-child{display: block;}
+
+		.colorList li.active{ background:tomato;}
+		.buyList li{display: none;}
+	</style>
+	<script src="../../lib/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+	
+	<ul class="category">
+		<li><a href="#none">512GB</a></li>
+		<li><a href="#none">256GB</a></li>
+	</ul>
+	<div class="categoryCon">
+		<div class="sizeCon">
+			<ul class="colorList">
+				<li><a href="#;">블랙</a></li>
+				<li><a href="#;">실버</a></li>
+				<li><a href="#;">화이트</a></li>
+			</ul>
+			<ul class="buyList">
+				<li><a href="#;">블랙 구매하기</a></li>
+				<li><a href="#;">실버 구매하기</a></li>
+				<li><a href="#;">화이트 구매하기</a></li>
+			</ul>
+		</div>
+		<div class="sizeCon">
+			<ul class="colorList">
+				<li><a href="#;">핑크</a></li>
+				<li><a href="#;">레드</a></li>
+				<li><a href="#;">블루</a></li>
+			</ul>
+				<ul class="buyList">
+				<li><a href="#;">핑크 구매하기</a></li>
+				<li><a href="#;">레드 구매하기</a></li>
+				<li><a href="#;">블루 구매하기</a></li>
+			</ul>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function(){
+
+			var $sizeCon = $('.sizeCon');
+			var $buyList = $('.buyList');
+			$buyList.each(function(){
+				$(this).find('li').eq(0).show();
+			});
+
+			$('.category a').on('click', function(){				
+				var idx = $(this).parent().index();
+				$(this).closest('ul').find('li').removeClass('active');
+				$(this).parent().addClass('active');
+
+				$sizeCon.hide().eq(idx).show();
+			})
+
+			$('.colorList a').on('click', function(){
+				var idx = $(this).parent().index();
+				$(this).closest('ul').find('li').removeClass('active');
+				$(this).parent().addClass('active');
+
+				$(this).closest('.sizeCon').find('.buyList li').hide().eq(idx).show();
+			});
+		})
+	</script>
+</body>
+</html>
