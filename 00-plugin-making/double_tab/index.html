@@ -23,13 +23,13 @@
 </head>
 <body>
 	
-	<ul class="category">
+	<ul class="category tabMenu" data-tab="tabMenu">
 		<li><a href="#none">512GB</a></li>
 		<li><a href="#none">256GB</a></li>
 	</ul>
 	<div class="categoryCon">
-		<div class="sizeCon">
-			<ul class="colorList">
+		<div class="sizeCon" data-tab="tabCon">
+			<ul class="colorList tabMenu">
 				<li><a href="#;">블랙</a></li>
 				<li><a href="#;">실버</a></li>
 				<li><a href="#;">화이트</a></li>
@@ -40,7 +40,7 @@
 				<li><a href="#;">화이트 구매하기</a></li>
 			</ul>
 		</div>
-		<div class="sizeCon">
+		<div class="sizeCon" data-tab="tabCon">
 			<ul class="colorList">
 				<li><a href="#;">핑크</a></li>
 				<li><a href="#;">레드</a></li>
@@ -54,10 +54,11 @@
 		</div>
 	</div>
 	<script>
-		$(document).ready(function(){
+/* 		$(document).ready(function(){
 
 			var $sizeCon = $('.sizeCon');
 			var $buyList = $('.buyList');
+
 			$buyList.each(function(){
 				$(this).find('li').eq(0).show();
 			});
@@ -66,7 +67,6 @@
 				var idx = $(this).parent().index();
 				$(this).closest('ul').find('li').removeClass('active');
 				$(this).parent().addClass('active');
-
 				$sizeCon.hide().eq(idx).show();
 			})
 
@@ -74,10 +74,39 @@
 				var idx = $(this).parent().index();
 				$(this).closest('ul').find('li').removeClass('active');
 				$(this).parent().addClass('active');
-
 				$(this).closest('.sizeCon').find('.buyList li').hide().eq(idx).show();
 			});
-		})
+		}); */
+
+
+		function Tab(opts) {
+			this.opts = opts;
+			this.$wrap = $('.tabMenu');
+			this.$tabMenu = this.$wrap.find('a');
+			this.$tabCon = $('.sizeCon');
+			this.init();
+		}
+
+		Tab.prototype = {
+			init : function () {
+					var context = this;
+					$(document).on('click','[data-tab="tabMenu"] a',function(){
+						$(this).closest('[data-tab="tabMenu"]').find('li').removeClass('active');
+						var idx = $(this).closest('[data-tab="tabMenu"] li').addClass('active').index();
+						context.conOpen(idx);
+					})
+			},
+			conOpen : function(idx) {
+				console.log()
+				this.$tabCon.hide();
+				this.$tabCon.eq(idx).show();
+			},
+
+		}
+
+		new Tab();
+
+
 	</script>
 </body>
 </html>
